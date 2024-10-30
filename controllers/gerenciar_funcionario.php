@@ -1,6 +1,7 @@
 <?php
-include '../db/db_config.php';
-include '../classes/Funcionario.php';
+
+include 'C:\laragon\www\Trabalho-final---GastroNet\database\db_config.php';
+include 'C:\laragon\www\Trabalho-final---GastroNet\classes\Funcionario.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $acao = $_POST["acao"];
@@ -12,9 +13,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $senha = isset($_POST["senha"]) ? $_POST["senha"] : null;
 
     switch ($acao) {
-        case 'cadastrar':
+        case 'salvar': 
             $funcionario = new Funcionario($nome, $cargo, $setor, $login, $senha);
-            echo $funcionario->cadastrar($conn);
+            echo $funcionario->salvar($conn);
             break;
 
         case 'buscar':
@@ -22,15 +23,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $funcionario = Funcionario::buscar($conn, $id);
                 if ($funcionario) {
                     echo "<h3>Dados do Funcionário</h3>";
-                    echo "Nome: " . htmlspecialchars($funcionario['nome']) . "<br>";
-                    echo "Cargo: " . htmlspecialchars($funcionario['cargo']) . "<br>";
-                    echo "Setor: " . htmlspecialchars($funcionario['setor']) . "<br>";
-                    echo "Login: " . htmlspecialchars($funcionario['login']) . "<br>";
-                } else {
-                    echo "Funcionário não encontrado.";
+                    echo "<table border='1' style='border-collapse: collapse; width: 50%;'>";
+                    echo "<tr><th>ID</th><th>Nome</th><th>Cargo</th><th>Setor</th><th>Login</th></tr>";
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($funcionario['id']) . "</td>";
+                    echo "<td>" . htmlspecialchars($funcionario['nome']) . "</td>";
+                    echo "<td>" . htmlspecialchars($funcionario['cargo']) . "</td>";
+                    echo "<td>" . htmlspecialchars($funcionario['setor']) . "</td>";
+                    echo "<td>" . htmlspecialchars($funcionario['login']) . "</td>";
+                    echo "</tr>";
+                    echo "</table>";
+                } else {       
+                    echo "<p>Funcionário não encontrado.</p>";
                 }
             } else {
-                echo "Por favor, forneça o ID do funcionário.";
+                echo "<p>Por favor, forneça o ID do funcionário.</p>";
             }
             break;
 
@@ -47,8 +54,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $funcionarios = Funcionario::listar($conn);
             if ($funcionarios) {
                 echo "<h3>Lista de Funcionários</h3>";
-                echo "<table border='1'>";
-                echo "<tr><th>ID</th><th>Nome</th><th>Cargo</th><th>Setor</th><th>Login</th></tr>";
+                echo "<table border='1' style='border-collapse: collapse; width: 50%;'>";
+                echo "<tr><th>ID</th><th>Nome</th><th>Cargo</th><th>Setor</th><th>Login</th><th>Ações</th></tr>";
                 foreach ($funcionarios as $funcionario) {
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($funcionario['id']) . "</td>";
@@ -56,6 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     echo "<td>" . htmlspecialchars($funcionario['cargo']) . "</td>";
                     echo "<td>" . htmlspecialchars($funcionario['setor']) . "</td>";
                     echo "<td>" . htmlspecialchars($funcionario['login']) . "</td>";
+                    echo "<td><button onclick='excluirFuncionario(" . htmlspecialchars($funcionario['id']) . ")'>Excluir</button></td>";
                     echo "</tr>";
                 }
                 echo "</table>";
@@ -64,9 +72,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             break;
 
-        default:
-            echo "Ação inválida.";
-            break;
+            case 'excluir':
+                if ($id) {
+                    $resultado = Funcionario::excluir($conn, $id);                    
+                    echo $resultado;
+                } else {
+                    echo "Por favor, forneça o ID do funcionário para excluí-lo.";
+                }
+                break;
+            
     }
 }
 ?>

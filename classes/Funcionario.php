@@ -15,7 +15,7 @@ class Funcionario {
         $this->senha = password_hash($senha, PASSWORD_DEFAULT);
     }
 
-    public function cadastrar($conn) {
+    public function salvar($conn) {
         try {
             $sql = "INSERT INTO funcionarios (nome, cargo, setor, login, senha) 
                     VALUES (:nome, :cargo, :setor, :login, :senha)";
@@ -26,9 +26,9 @@ class Funcionario {
             $stmt->bindParam(':login', $this->login);
             $stmt->bindParam(':senha', $this->senha);
             $stmt->execute();
-            return "Funcionário cadastrado com sucesso!";
+            return "Funcionário salvo com sucesso!";
         } catch (PDOException $e) {
-            return "Erro ao cadastrar funcionário: " . $e->getMessage();
+            return "Erro ao salvar funcionário: " . $e->getMessage();
         }
     }
 
@@ -70,6 +70,18 @@ class Funcionario {
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             return "Erro ao listar funcionários: " . $e->getMessage();
+        }
+    }
+
+    public static function excluir($conn, $id) {
+        try {
+            $sql = "DELETE FROM funcionarios WHERE id = :id";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+            return "Funcionário excluído com sucesso!";
+        } catch (PDOException $e) {
+            return "Erro ao excluir funcionário: " . $e->getMessage();
         }
     }
 }

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro e Gerenciamento de Cliente</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#telefone').inputmask('(99) 99999-9999'); 
+        });
+
+        function validarEmail(email) {
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return regex.test(email);
+        }
+
+        function enviarFormulario(acao) {
+            const email = $('#email').val();
+
+            if (acao === 'salvar' && !validarEmail(email)) {
+                alert("Por favor, insira um email válido.");
+                return;
+            }
+
+            const formData = {
+                id: $('#id').val(),
+                nome: $('#nome').val(),
+                telefone: $('#telefone').val(),
+                endereco: $('#endereco').val(),
+                email: email,
+                acao: acao
+            };
+
+            $.post('../controllers/gerenciar_cliente.php', formData, function(response) {
+                if (acao === 'listar') {
+                    $('#resultado').html(response); 
+                } else if (acao === 'buscar') {
+                    $('#resultado').html(response); 
+                } else {
+                    alert(response); 
+                    if (acao === 'salvar') {
+                        setTimeout(function() {
+                            window.location.reload(); 
+                        }, 1000); 
+                    }
+                }
+            });
+        }
+
+        function buscarCliente() {
+            const id = $('#id').val();
+            if (!id) {
+                alert("Por favor, forneça o ID do cliente.");
+                return;
+            }
+            enviarFormulario('buscar');
+        }
+
+        function excluirCliente(id) {
+            if (confirm('Tem certeza que deseja excluir este cliente?')) {
+                $.post('../controllers/gerenciar_cliente.php', { acao: 'excluir', id: id }, function(response) {
+                    alert(response);
+                    enviarFormulario('listar'); // Atualiza a lista após exclusão
+                });
+            }
+        }
+
+        function limparFormulario() {
+            $('#id').val('');
+            $('#nome').val('');
+            $('#telefone').val('');
+            $('#endereco').val('');
+            $('#email').val('');
+        }
+
+        function preencherFormulario(cliente) {
+            $('#id').val(cliente.id);
+            $('#nome').val(cliente.nome);
+            $('#telefone').val(cliente.telefone);
+            $('#endereco').val(cliente.endereco);
+            $('#email').val(cliente.email);
+        }
+    </script>
+</head>
+<body>
+
+ <!-- Botão para voltar à tela principal com ícone de flecha -->
+ <button onclick="window.location.href='index.html'">
+    <i class="fas fa-arrow-left"></i> Tela Principal
+</button>
+
+    <h2>Cadastro e Gerenciamento de Cliente</h2>    
+
+    <form onsubmit="event.preventDefault();">
+        <label for="id">ID:</label>
+        <input type="number" id="id" name="id"><br>
+
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome"><br>
+
+        <label for="telefone">Telefone:</label>
+        <input type="text" id="telefone" name="telefone"><br>
+
+        <label for="endereco">Endereço:</label>
+        <input type="text" id="endereco" name="endereco"><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email"><br>
+
+        <button type="button" onclick="enviarFormulario('salvar')">Salvar</button>
+        <button type="button" onclick="buscarCliente()">Buscar</button>
+        <button type="button" onclick="enviarFormulario('alterar')">Alterar</button>
+        <button type="button" onclick="enviarFormulario('listar')">Listar</button>
+    </form>
+
+    <div id="resultado"></div>
+    <div id="listaClientes">
+        <!-- A lista de clientes será injetada aqui -->
+    </div>
+</body>
+</html>
