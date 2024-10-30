@@ -15,31 +15,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     switch ($acao) {
         case 'salvar': 
             $funcionario = new Funcionario($nome, $cargo, $setor, $login, $senha);
-            echo $funcionario->salvar($conn);
-            break;
-
-        case 'buscar':
-            if ($id) {
-                $funcionario = Funcionario::buscar($conn, $id);
-                if ($funcionario) {
-                    echo "<h3>Dados do Funcionário</h3>";
-                    echo "<table border='1' style='border-collapse: collapse; width: 50%;'>";
-                    echo "<tr><th>ID</th><th>Nome</th><th>Cargo</th><th>Setor</th><th>Login</th></tr>";
-                    echo "<tr>";
-                    echo "<td>" . htmlspecialchars($funcionario['id']) . "</td>";
-                    echo "<td>" . htmlspecialchars($funcionario['nome']) . "</td>";
-                    echo "<td>" . htmlspecialchars($funcionario['cargo']) . "</td>";
-                    echo "<td>" . htmlspecialchars($funcionario['setor']) . "</td>";
-                    echo "<td>" . htmlspecialchars($funcionario['login']) . "</td>";
-                    echo "</tr>";
-                    echo "</table>";
-                } else {       
-                    echo "<p>Funcionário não encontrado.</p>";
-                }
+            if ($id) { 
+                echo $funcionario->alterar($conn, $id);
             } else {
-                echo "<p>Por favor, forneça o ID do funcionário.</p>";
+                echo $funcionario->salvar($conn);
             }
             break;
+
+            case 'buscar':
+                if ($id) {
+                    $funcionario = Funcionario::buscar($conn, $id);
+                    if ($funcionario) {
+                        // Montar uma tabela HTML para exibir os dados
+                        echo "<h3>Detalhes do Funcionário</h3>";
+                        echo "<table border='1' style='border-collapse: collapse; width: 50%;'>";
+                        echo "<tr><th>ID</th><td>" . htmlspecialchars($funcionario['id']) . "</td></tr>";
+                        echo "<tr><th>Nome</th><td>" . htmlspecialchars($funcionario['nome']) . "</td></tr>";
+                        echo "<tr><th>Cargo</th><td>" . htmlspecialchars($funcionario['cargo']) . "</td></tr>";
+                        echo "<tr><th>Setor</th><td>" . htmlspecialchars($funcionario['setor']) . "</td></tr>";
+                        echo "<tr><th>Login</th><td>" . htmlspecialchars($funcionario['login']) . "</td></tr>";
+                        echo "</table>";
+                        // Adicionar um botão para editar
+                        echo "<button onclick='editarFuncionario(" . htmlspecialchars($funcionario['id']) . ")'>Alterar</button>";
+                    } else {
+                        echo "<p>Funcionário não encontrado.</p>";
+                    }
+                } else {
+                    echo "<p>ID do funcionário não fornecido.</p>";
+                }
+                break;
+            
+            
 
         case 'alterar':
             if ($id) {
@@ -50,27 +56,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             break;
 
-        case 'listar':
-            $funcionarios = Funcionario::listar($conn);
-            if ($funcionarios) {
-                echo "<h3>Lista de Funcionários</h3>";
-                echo "<table border='1' style='border-collapse: collapse; width: 50%;'>";
-                echo "<tr><th>ID</th><th>Nome</th><th>Cargo</th><th>Setor</th><th>Login</th><th>Ações</th></tr>";
-                foreach ($funcionarios as $funcionario) {
-                    echo "<tr>";
-                    echo "<td>" . htmlspecialchars($funcionario['id']) . "</td>";
-                    echo "<td>" . htmlspecialchars($funcionario['nome']) . "</td>";
-                    echo "<td>" . htmlspecialchars($funcionario['cargo']) . "</td>";
-                    echo "<td>" . htmlspecialchars($funcionario['setor']) . "</td>";
-                    echo "<td>" . htmlspecialchars($funcionario['login']) . "</td>";
-                    echo "<td><button onclick='excluirFuncionario(" . htmlspecialchars($funcionario['id']) . ")'>Excluir</button></td>";
-                    echo "</tr>";
+            case 'listar':
+                $funcionarios = Funcionario::listar($conn);
+                if ($funcionarios) {
+                    echo "<h3>Lista de Funcionários</h3>";
+                    echo "<table border='1' style='border-collapse: collapse; width: 40%;'>";
+                    echo "<tr><th>ID</th><th>Nome</th><th>Cargo</th><th>Setor</th><th>Login</th><th>Ações</th></tr>";
+                    foreach ($funcionarios as $funcionario) {
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($funcionario['id']) . "</td>";
+                        echo "<td>" . htmlspecialchars($funcionario['nome']) . "</td>";
+                        echo "<td>" . htmlspecialchars($funcionario['cargo']) . "</td>";
+                        echo "<td>" . htmlspecialchars($funcionario['setor']) . "</td>";
+                        echo "<td>" . htmlspecialchars($funcionario['login']) . "</td>";
+                        echo "<td class='text-center'>
+                                <button onclick='excluirFuncionario(" . htmlspecialchars($funcionario['id']) . ")'>Excluir</button>
+                                <button onclick='editarFuncionario(" . htmlspecialchars($funcionario['id']) . ")'>Alterar</button>
+                              </td>";
+                        echo "</tr>";
+                    }
+                    echo "</table>";
+                } else {
+                    echo "Nenhum funcionário encontrado.";
                 }
-                echo "</table>";
-            } else {
-                echo "Nenhum funcionário encontrado.";
-            }
-            break;
+                break;
+            
 
             case 'excluir':
                 if ($id) {
