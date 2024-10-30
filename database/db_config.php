@@ -1,8 +1,8 @@
 <?php
 $host = "localhost";
-$dbname = "seu_banco";
-$user = "seu_usuario";
-$password = "sua_senha";
+$dbname = "gastronet";
+$user = "postgres";
+$password = "1234";
 
 try {
     $conn = new PDO("pgsql:host=$host;dbname=$dbname", $user, $password);
