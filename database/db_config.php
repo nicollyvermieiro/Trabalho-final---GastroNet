@@ -1,17 +1,14 @@
 <?php
-// Caminho para o banco de dados SQLite
-$dbname = "C:\laragon\www\Trabalho-final---GastroNet\database\gastronet.db";
+$servername = "localhost";
+$username = "root";
+$password = "";
+$database = "gastronet";
 
-try {
-    // Conexão com o banco de dados SQLite
-    $conn = new PDO("sqlite:$dbname");
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// Criar a conexão
+$conn = new mysqli($servername, $username, $password, $database);
 
-    // Verificação de conexão
-    if ($conn) {
-        echo "Conexão com o banco de dados estabelecida!";
-    }
-} catch (PDOException $e) {
-    echo "Erro de conexão: " . $e->getMessage();
+// Verificar a conexão
+if ($conn->connect_error) {
+  die("Falha na conexão: " . $conn->connect_error);
 }
 ?>

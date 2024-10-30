@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = isset($_POST["email"]) ? $_POST["email"] : null;
 
     switch ($acao) {
-        case 'salvar': 
+        case 'salvar':
             $cliente = new Cliente($nome, $telefone, $endereco, $email);
             echo $cliente->salvar($conn);
             break;
@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     echo "<td>" . htmlspecialchars($cliente['email']) . "</td>";
                     echo "</tr>";
                     echo "</table>";
-                } else {       
+                } else {
                     echo "<p>Cliente não encontrado.</p>";
                 }
             } else {
@@ -49,32 +49,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             break;
 
-        case 'listar':
-            $clientes = Cliente::listar($conn);
-            if ($clientes) {
-                echo "<h3>Lista de Clientes</h3>";
-                echo "<table border='1' style='border-collapse: collapse; width: 50%;'>";
-                echo "<tr><th>ID</th><th>Nome</th><th>Telefone</th><th>Endereço</th><th>Email</th><th>Ações</th></tr>";
-                foreach ($clientes as $cliente) {
-                    echo "<tr>";
-                    echo "<td>" . htmlspecialchars($cliente['id']) . "</td>";
-                    echo "<td>" . htmlspecialchars($cliente['nome']) . "</td>";
-                    echo "<td>" . htmlspecialchars($cliente['telefone']) . "</td>";
-                    echo "<td>" . htmlspecialchars($cliente['endereco']) . "</td>";
-                    echo "<td>" . htmlspecialchars($cliente['email']) . "</td>";
-                    echo "<td><button onclick='excluirCliente(" . htmlspecialchars($cliente['id']) . ")'>Excluir</button></td>";
-                    echo "</tr>";
+            case 'listar':
+                $clientes = Cliente::listar($conn);
+                if ($clientes) {
+                    echo "<h3>Lista de Clientes</h3>";
+                    echo "<table border='1' style='border-collapse: collapse; width: 70%;'>";
+                    echo "<tr><th>ID</th><th>Nome</th><th>Telefone</th><th>Endereço</th><th>Email</th><th>Ações</th></tr>";
+                    foreach ($clientes as $cliente) {
+                        echo "<tr>";
+                        echo "<td>" . htmlspecialchars($cliente['id']) . "</td>";
+                        echo "<td>" . htmlspecialchars($cliente['nome']) . "</td>";
+                        echo "<td>" . htmlspecialchars($cliente['telefone']) . "</td>";
+                        echo "<td>" . htmlspecialchars($cliente['endereco']) . "</td>";
+                        echo "<td>" . htmlspecialchars($cliente['email']) . "</td>";
+                        echo "<td class='text-center'>
+                                <button onclick='excluirCliente(" . htmlspecialchars($cliente['id']) . ")'>Excluir</button>
+                                <button onclick='editarCliente(" . htmlspecialchars($cliente['id']) . ")'>Alterar</button>
+                              </td>";
+                        echo "</tr>";
+                    }
+                    echo "</table>";
+                } else {
+                    echo "Nenhum cliente encontrado.";
                 }
-                echo "</table>";
-            } else {
-                echo "Nenhum cliente encontrado.";
-            }
-            break;
+                break;
+            
 
         case 'excluir':
             if ($id) {
-                $resultado = Cliente::excluir($conn, $id);                    
-                echo $resultado;
+                echo Cliente::excluir($conn, $id);
             } else {
                 echo "Por favor, forneça o ID do cliente para excluí-lo.";
             }
@@ -82,3 +85,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+

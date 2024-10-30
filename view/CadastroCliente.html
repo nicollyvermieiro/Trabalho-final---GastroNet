@@ -17,54 +17,63 @@
         }
 
         function enviarFormulario(acao) {
-            const email = $('#email').val();
-
-            if (acao === 'salvar' && !validarEmail(email)) {
-                alert("Por favor, insira um email válido.");
-                return;
-            }
-
             const formData = {
                 id: $('#id').val(),
                 nome: $('#nome').val(),
                 telefone: $('#telefone').val(),
                 endereco: $('#endereco').val(),
-                email: email,
-                acao: acao
+                email: $('#email').val(),
+                acao: $('#id').val() ? 'alterar' : 'salvar' 
             };
 
             $.post('../controllers/gerenciar_cliente.php', formData, function(response) {
-                if (acao === 'listar') {
-                    $('#resultado').html(response); 
-                } else if (acao === 'buscar') {
-                    $('#resultado').html(response); 
-                } else {
-                    alert(response); 
-                    if (acao === 'salvar') {
-                        setTimeout(function() {
-                            window.location.reload(); 
-                        }, 1000); 
-                    }
-                }
+                alert(response);
+                limparFormulario();
+                listarClientes();
             });
         }
 
-        function buscarCliente() {
-            const id = $('#id').val();
+        function buscarClientePorId() {
+            const id = $('#idBuscar').val();
             if (!id) {
                 alert("Por favor, forneça o ID do cliente.");
                 return;
             }
-            enviarFormulario('buscar');
+            $.post('../controllers/gerenciar_cliente.php', { acao: 'buscar', id: id }, function(response) {
+                $('#resultado').html(response); 
+            });
         }
 
         function excluirCliente(id) {
             if (confirm('Tem certeza que deseja excluir este cliente?')) {
                 $.post('../controllers/gerenciar_cliente.php', { acao: 'excluir', id: id }, function(response) {
                     alert(response);
-                    enviarFormulario('listar'); // Atualiza a lista após exclusão
+                    listarClientes();
                 });
             }
+        }
+
+        function editarCliente(id) {
+            $.post('../controllers/gerenciar_cliente.php', { acao: 'buscar', id: id }, function(response) {
+                $('#resultado').html(response); 
+                const clienteId = id; 
+
+                $('#id').val(clienteId); 
+                $('#nome').val($('#resultado').find('td').eq(1).text()); 
+                $('#telefone').val($('#resultado').find('td').eq(2).text()); 
+                $('#endereco').val($('#resultado').find('td').eq(3).text()); 
+                $('#email').val($('#resultado').find('td').eq(4).text()); 
+
+                $('#formulario').show();
+                $('#botaoSalvar').hide(); 
+                $('#botaoAlterar').show().attr("onclick", `enviarFormulario('alterar')`); 
+            });
+        }
+
+        function listarClientes() {
+            $.post('../controllers/gerenciar_cliente.php', { acao: 'listar' }, function(response) {
+                $('#resultado').html(response);
+            });
         }
 
         function limparFormulario() {
@@ -73,51 +82,94 @@
             $('#telefone').val('');
             $('#endereco').val('');
             $('#email').val('');
-        }
-
-        function preencherFormulario(cliente) {
-            $('#id').val(cliente.id);
-            $('#nome').val(cliente.nome);
-            $('#telefone').val(cliente.telefone);
-            $('#endereco').val(cliente.endereco);
-            $('#email').val(cliente.email);
+            $('#botaoSalvar').show();
+            $('#botaoAlterar').hide();
         }
     </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h2 {
+            color: #333;
+        }
+        button {
+            margin: 0 5px; 
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #formulario, #listaClientes {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin: 5px 0;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
 
- <!-- Botão para voltar à tela principal com ícone de flecha -->
- <button onclick="window.location.href='index.html'">
-    <i class="fas fa-arrow-left"></i> Tela Principal
-</button>
+    <button onclick="window.location.href='index.html'">Tela Principal</button>
+    <h2>Cadastro e Gerenciamento de Clientes</h2>
 
-    <h2>Cadastro e Gerenciamento de Cliente</h2>    
+    <button onclick="$('#formulario').toggle()">Criar Novo Cliente</button>
+    <button onclick="$('#listaClientes').toggle(); listarClientes();">Lista de Clientes</button>
 
-    <form onsubmit="event.preventDefault();">
-        <label for="id">ID:</label>
-        <input type="number" id="id" name="id"><br>
+    <div id="formulario" style="display: none;">
+        <h3>Formulário de Cadastro</h3>
+        <form onsubmit="event.preventDefault();">
+            <input type="hidden" id="id" name="id">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required><br>
 
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome"><br>
+            <label for="telefone">Telefone:</label>
+            <input type="text" id="telefone" name="telefone" required><br>
 
-        <label for="telefone">Telefone:</label>
-        <input type="text" id="telefone" name="telefone"><br>
+            <label for="endereco">Endereço:</label>
+            <input type="text" id="endereco" name="endereco" required><br>
 
-        <label for="endereco">Endereço:</label>
-        <input type="text" id="endereco" name="endereco"><br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
 
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email"><br>
-
-        <button type="button" onclick="enviarFormulario('salvar')">Salvar</button>
-        <button type="button" onclick="buscarCliente()">Buscar</button>
-        <button type="button" onclick="enviarFormulario('alterar')">Alterar</button>
-        <button type="button" onclick="enviarFormulario('listar')">Listar</button>
-    </form>
-
-    <div id="resultado"></div>
-    <div id="listaClientes">
-        <!-- A lista de clientes será injetada aqui -->
+            <button type="button" id="botaoSalvar" onclick="enviarFormulario('salvar')">Salvar</button>
+            <button type="button" onclick="limparFormulario()">Limpar</button>
+        </form>
     </div>
+
+    <div id="listaClientes" style="display: none;">
+        <h3>Lista de Clientes</h3>
+
+        <div id="buscaCliente" style="margin-bottom: 20px;">
+            <label for="idBuscar">Buscar Cliente pelo ID:</label>
+            <input type="number" id="idBuscar" placeholder="Digite o ID do cliente">
+            <button type="button" onclick="buscarClientePorId()">Buscar</button>
+        </div>
+
+        <div id="resultado">
+            <!-- Lista de clientes será injetada aqui com botões Excluir e Alterar -->
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 - Todos os direitos reservados</p>
+    </footer>
+
 </body>
 </html>
