@@ -1,7 +1,7 @@
 <?php
 
-include 'C:\laragon\www\Trabalho-final---GastroNet\database\db_config.php';
-include 'C:\laragon\www\Trabalho-final---GastroNet\classes\Funcionario.php';
+include '../database/db_config.php';
+include '../classes/Funcionario.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $acao = $_POST["acao"];
