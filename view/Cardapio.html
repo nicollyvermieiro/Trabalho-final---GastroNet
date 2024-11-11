@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Gerenciamento de Cardápios</title>
+    <link rel="stylesheet" href="CSS/Cardapio.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
@@ -38,50 +39,20 @@
             $('#itens').val('');
         }
     </script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h2 {
-            color: #333;
-        }
-        button {
-            margin: 0 5px; 
-            padding: 10px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #formulario, #listaCardapios {
-            margin-top: 20px;
-        }
-        label {
-            display: block;
-            margin: 5px 0;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-    </style>
 </head>
 <body>
+    <nav class="a">
+        <div>
+            <img src="imgs/75837d9e-32c8-459e-913e-ac719ac12b2c.jfif" alt="Logo" class="logo">
+        </div>
+        <h2>Cadastro e Gerenciamento de Cardápios</h2>
+    </nav>
 
-    <h2>Cadastro e Gerenciamento de Cardápios</h2>
-
-    <button onclick="$('#formulario').toggle()">Criar Novo Cardápio</button>
-    <button onclick="$('#listaCardapios').toggle(); listarCardapios();">Lista de Cardápios</button>
+    <nav class="b">
+        <button onclick="window.location.href='index.html'">Tela Principal</button>
+        <button onclick="$('#formulario').toggle()">Criar Novo Cardápio</button>
+        <button onclick="$('#listaCardapios').toggle(); listarCardapios();">Lista de Cardápios</button>
+    </nav>
 
     <div id="formulario" style="display: none;">
         <h3>Formulário de Cadastro</h3>

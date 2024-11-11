@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Cadastro e Gerenciamento de Cliente</title>
+    <link rel="stylesheet" href="CSS/CadastroCliente.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
@@ -87,6 +88,7 @@
         }
     </script>
     <style>
+        /*
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -121,17 +123,23 @@
             margin: 5px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
-        }
+        }*/
     </style>
 </head>
 <body>
+    <nav class="a">
+        <div>
+            <img src="imgs/75837d9e-32c8-459e-913e-ac719ac12b2c.jfif" alt="Logo" class="logo">
+        </div>
+        <h2>Cadastro e Gerenciamento de Clientes</h2>
+    </nav>
 
-    <button onclick="window.location.href='index.html'">Tela Principal</button>
-    <h2>Cadastro e Gerenciamento de Clientes</h2>
-
-    <button onclick="$('#formulario').toggle()">Criar Novo Cliente</button>
-    <button onclick="$('#listaClientes').toggle(); listarClientes();">Lista de Clientes</button>
-
+    <nav class="b">
+        <button onclick="window.location.href='index.html'">Tela Principal</button>
+        <button onclick="$('#formulario').toggle()">Cadastrar Cliente</button>
+        <button onclick="$('#listaClientes').toggle(); listarClientes();">Lista de Clientes</button>
+    </nav>
+    
     <div id="formulario" style="display: none;">
         <h3>Formulário de Cadastro</h3>
         <form onsubmit="event.preventDefault();">
