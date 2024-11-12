@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funcionários - GastroNet</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Funcionários</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Voltar para a página principal</a></li>
+                <li><a href="clientes.html">Clientes</a></li>
+                <li><a href="cardapio.html">Cardápio</a></li>
+                <li><a href="pedidos.html">Pedidos</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section>
+        <h2>Cadastrar Funcionário</h2>
+        <form id="cadastroFuncionario">
+            <label for="nomeFuncionario">Nome:</label>
+            <input type="text" id="nomeFuncionario" name="nomeFuncionario" required>
+
+            <label for="cargo">Cargo:</label>
+            <input type="text" id="cargo" name="cargo" required>
+
+            <label for="setor">Setor:</label>
+            <input type="text" id="setor" name="setor" required>
+
+            <label for="login">Login:</label>
+            <input type="text" id="login" name="login" required>
+
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required>
+
+            <button type="submit">Cadastrar</button>
+        </form>
+
+        <h2>Lista de Funcionários</h2>
+        <ul id="listaFuncionarios">
+            <!-- Lista de funcionários será carregada aqui via AJAX -->
+        </ul>
+    </section>
+
+    <script>
+        $(document).ready(function() {
+            // Função para carregar a lista de funcionários
+            function carregarFuncionarios() {
+                $.ajax({
+                    url: 'funcionario_provider.php', // Ajuste para o nome correto do seu arquivo PHP
+                    method: 'GET',
+                    success: function(data) {
+                        $('#listaFuncionarios').empty(); // Limpa a lista antes de adicionar
+                        data.forEach(function(funcionario) {
+                            $('#listaFuncionarios').append(`
+                                <li>
+                                    ${funcionario.nome} - ${funcionario.cargo}
+                                    <button onclick="buscarFuncionario(${funcionario.id})">Buscar</button>
+                                    <button onclick="alterarFuncionario(${funcionario.id})">Alterar</button>
+                                </li>
+                            `);
+                        });
+                    },
+                    error: function() {
+                        alert("Erro ao carregar a lista de funcionários.");
+                    }
+                });
+            }
+
+            // Carregar funcionários ao iniciar a página
+            carregarFuncionarios();
+
+            // Enviar dados do formulário para cadastrar um funcionário
+            $('#cadastroFuncionario').submit(function(event) {
+                event.preventDefault(); // Impede o comportamento padrão do formulário
+                const nome = $('#nomeFuncionario').val();
+                const cargo = $('#cargo').val();
+                const setor = $('#setor').val();
+                const login = $('#login').val();
+                const senha = $('#senha').val();
+
+                // Enviar dados do funcionário via AJAX para o backend
+                $.ajax({
+                    url: 'funcionario_provider.php', // Ajuste para o nome correto do seu arquivo PHP
+                    method: 'POST',
+                    data: { nome, cargo, setor, login, senha },
+                    success: function() {
+                        alert('Funcionário cadastrado com sucesso!');
+                        carregarFuncionarios(); // Atualiza a lista de funcionários após o cadastro
+                    },
+                    error: function() {
+                        alert("Erro ao cadastrar funcionário.");
+                    }
+                });
+            });
+        });
+
+        // Função para buscar funcionário por ID
+        function buscarFuncionario(id) {
+            $.ajax({
+                url: 'funcionario_provider.php', // Ajuste para o nome correto do seu arquivo PHP
+                method: 'GET',
+                data: { id },
+                success: function(funcionario) {
+                    alert('Funcionário encontrado: ' + funcionario.nome);
+                },
+                error: function() {
+                    alert("Erro ao buscar funcionário.");
+                }
+            });
+        }
+
+        // Função para alterar funcionário
+        function alterarFuncionario(id) {
+            const nome = prompt("Digite o novo nome:");
+            const cargo = prompt("Digite o novo cargo:");
+            const setor = prompt("Digite o novo setor:");
+            const login = prompt("Digite o novo login:");
+            const senha = prompt("Digite a nova senha:");
+
+            // Envia os dados atualizados para o backend
+            $.ajax({
+                url: 'funcionario_provider.php', // Ajuste para o nome correto do seu arquivo PHP
+                method: 'PUT',
+                data: { id, nome, cargo, setor, login, senha },
+                success: function() {
+                    alert('Funcionário alterado com sucesso!');
+                    carregarFuncionarios(); // Atualiza a lista de funcionários após a alteração
+                },
+                error: function() {
+                    alert("Erro ao alterar funcionário.");
+                }
+            });
+        }
+    </script>
+</body>
+</html>
