@@ -1,5 +1,4 @@
 <?php
-// ClienteProvider.php
 include_once('Cliente.php');
 
 class ClienteProvider {

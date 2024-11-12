@@ -5,14 +5,14 @@ include_once('Pedido.php');
 class PedidoProvider {
 
     // Método para cadastrar um pedido
-    public static function cadastrar($num_pedido, $cliente, $itens, $valor_total, $forma_pag, $data_pedido) {
-        $pedido = new Pedido($num_pedido, $cliente, $itens, $valor_total, $forma_pag, $data_pedido);
+    public static function cadastrar($num_pedido, $cliente, $itens, $valor_total, $forma_pag) {
+        $pedido = new Pedido($num_pedido, $cliente, $itens, $valor_total, $forma_pag);
         return $pedido->cadastrar();
     }
 
     // Método para alterar um pedido
-    public static function alterar($id, $num_pedido, $cliente, $itens, $valor_total, $forma_pag, $data_pedido) {
-        $pedido = new Pedido($num_pedido, $cliente, $itens, $valor_total, $forma_pag, $data_pedido, $id);
+    public static function alterar($id, $num_pedido, $cliente, $itens, $valor_total, $forma_pag) {
+        $pedido = new Pedido($num_pedido, $cliente, $itens, $valor_total, $forma_pag, $id);
         return $pedido->alterar();
     }
 
