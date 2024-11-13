@@ -4,21 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clientes - GastroNet</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="CSS/CadastroCliente.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <header>
-        <h1>Clientes</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Voltar para a página principal</a></li>
-                <li><a href="funcionarios.html">Funcionários</a></li>
-                <li><a href="cardapio.html">Cardápio</a></li>
-                <li><a href="pedidos.html">Pedidos</a></li>
-            </ul>
-        </nav>
-    </header>
+    <nav class="a">
+        <div>
+            <img src="imgs/75837d9e-32c8-459e-913e-ac719ac12b2c.jfif" alt="Logo" class="logo">
+        </div>
+        <h2>Cadastro e Gerenciamento de Clientes</h2>
+    </nav>
+
+    <nav class="b">
+        <a href="index.html">Voltar para a página principal</a>
+        <a href="funcionarios.html">Funcionários</a>
+        <a href="cardapio.html">Cardápio</a>
+        <a href="pedidos.html">Pedidos</a>
+    </nav>
 
     <section>
         <h2>Cadastrar Cliente</h2>
@@ -42,96 +44,159 @@
         <ul id="listaClientes">
             <!-- Lista de clientes será carregada aqui via AJAX -->
         </ul>
+
+        <h2>Buscar Cliente</h2>
+        <form id="buscarClienteForm">
+            <label for="clienteId">ID:</label>
+            <input type="number" id="clienteId" name="clienteId" required>
+            <button type="submit">Buscar</button>
+        </form>
+
+        <div id="clienteEncontrado"></div>
+
+        <h2>Alterar Cliente</h2>
+        <form id="alterarClienteForm">
+            <label for="alterarId">ID:</label>
+            <input type="number" id="alterarId" name="alterarId" required>
+
+            <label for="alterarNome">Nome:</label>
+            <input type="text" id="alterarNome" name="alterarNome" required>
+
+            <label for="alterarTelefone">Telefone:</label>
+            <input type="text" id="alterarTelefone" name="alterarTelefone" required>
+
+            <label for="alterarEndereco">Endereço:</label>
+            <input type="text" id="alterarEndereco" name="alterarEndereco" required>
+
+            <label for="alterarEmail">Email:</label>
+            <input type="email" id="alterarEmail" name="alterarEmail" required>
+
+            <button type="submit">Alterar</button>
+        </form>
     </section>
 
     <script>
-        $(document).ready(function() {
-            // Função para carregar a lista de clientes
-            function carregarClientes() {
-                $.ajax({
-                    url: 'cliente_provider.php', // Ajuste para o nome correto do seu arquivo PHP
-                    method: 'GET',
-                    success: function(data) {
-                        $('#listaClientes').empty(); // Limpa a lista antes de adicionar
-                        data.forEach(function(cliente) {
-                            $('#listaClientes').append(`
-                                <li>
-                                    ${cliente.nome} - ${cliente.telefone}
-                                    <button onclick="buscarCliente(${cliente.id})">Buscar</button>
-                                    <button onclick="alterarCliente(${cliente.id})">Alterar</button>
-                                </li>
-                            `);
-                        });
-                    },
-                    error: function() {
-                        alert("Erro ao carregar a lista de clientes.");
+            $(document).ready(function() {
+        // Função para cadastrar cliente
+        $('#cadastroCliente').submit(function(event) {
+            event.preventDefault();
+            var nome = $('#nomeCliente').val();
+            var telefone = $('#telefone').val();
+            var endereco = $('#endereco').val();
+            var email = $('#emailCliente').val();
+            
+            $.ajax({
+                url: '../controllers/clienteControler.php',
+                method: 'POST',
+                data: {
+                    acao: 'salvar',
+                    nome: nome,
+                    telefone: telefone,
+                    endereco: endereco,
+                    email: email
+                },
+                success: function(response) {
+                    try {
+                        var data = JSON.parse(response);
+                        alert(data.message);
+                        carregarClientes(); // Recarrega a lista de clientes
+                    } catch (e) {
+                        alert("Erro na resposta do servidor.");
                     }
-                });
-            }
-
-            // Carregar clientes ao iniciar a página
-            carregarClientes();
-
-            // Enviar dados do formulário para cadastrar um cliente
-            $('#cadastroCliente').submit(function(event) {
-                event.preventDefault(); // Impede o comportamento padrão do formulário
-                const nome = $('#nomeCliente').val();
-                const telefone = $('#telefone').val();
-                const endereco = $('#endereco').val();
-                const email = $('#emailCliente').val();
-
-                // Enviar dados do cliente via AJAX para o backend
-                $.ajax({
-                    url: 'cliente_provider.php', // Ajuste para o nome correto do seu arquivo PHP
-                    method: 'POST',
-                    data: { nome, telefone, endereco, email },
-                    success: function() {
-                        alert('Cliente cadastrado com sucesso!');
-                        carregarClientes(); // Atualiza a lista de clientes após o cadastro
-                    },
-                    error: function() {
-                        alert("Erro ao cadastrar cliente.");
-                    }
-                });
+                },
+                error: function() {
+                    alert("Erro na comunicação com o servidor.");
+                }
             });
         });
 
-        // Função para buscar cliente por ID
-        function buscarCliente(id) {
+        // Função para listar clientes
+        function carregarClientes() {
             $.ajax({
-                url: 'cliente_provider.php', // Ajuste para o nome correto do seu arquivo PHP
-                method: 'GET',
-                data: { id },
-                success: function(cliente) {
-                    alert('Cliente encontrado: ' + cliente.nome);
+                url: '../controllers/clienteControler.php',
+                method: 'POST',
+                data: { acao: 'listar' },
+                success: function(response) {
+                    try {
+                        var clientes = JSON.parse(response);
+                        $('#listaClientes').html('');
+                        clientes.forEach(function(cliente) {
+                            $('#listaClientes').append('<li>' + cliente.nome + ' - ' + cliente.telefone + '</li>');
+                        });
+                    } catch (e) {
+                        alert("Erro ao carregar clientes.");
+                    }
                 },
                 error: function() {
-                    alert("Erro ao buscar cliente.");
+                    alert("Erro na comunicação com o servidor.");
                 }
             });
         }
+
+        // Função para buscar cliente
+        $('#buscarClienteForm').submit(function(event) {
+            event.preventDefault();
+            var id = $('#clienteId').val();
+            $.ajax({
+                url: '../controllers/clienteControler.php',
+                method: 'POST',
+                data: { acao: 'buscar', id: id },
+                success: function(response) {
+                    try {
+                        var cliente = JSON.parse(response);
+                        if (cliente.message) {
+                            $('#clienteEncontrado').html(cliente.message);
+                        } else {
+                            $('#clienteEncontrado').html('Nome: ' + cliente.nome + '<br>Telefone: ' + cliente.telefone);
+                        }
+                    } catch (e) {
+                        alert("Erro ao buscar cliente.");
+                    }
+                },
+                error: function() {
+                    alert("Erro na comunicação com o servidor.");
+                }
+            });
+        });
 
         // Função para alterar cliente
-        function alterarCliente(id) {
-            const nome = prompt("Digite o novo nome:");
-            const telefone = prompt("Digite o novo telefone:");
-            const endereco = prompt("Digite o novo endereço:");
-            const email = prompt("Digite o novo email:");
-
-            // Envia os dados atualizados para o backend
+        $('#alterarClienteForm').submit(function(event) {
+            event.preventDefault();
+            var id = $('#alterarId').val();
+            var nome = $('#alterarNome').val();
+            var telefone = $('#alterarTelefone').val();
+            var endereco = $('#alterarEndereco').val();
+            var email = $('#alterarEmail').val();
             $.ajax({
-                url: 'cliente_provider.php', // Ajuste para o nome correto do seu arquivo PHP
-                method: 'PUT',
-                data: { id, nome, telefone, endereco, email },
-                success: function() {
-                    alert('Cliente alterado com sucesso!');
-                    carregarClientes(); // Atualiza a lista de clientes após a alteração
+                url: '../controllers/clienteControler.php',
+                method: 'POST',
+                data: {
+                    acao: 'alterar',
+                    id: id,
+                    nome: nome,
+                    telefone: telefone,
+                    endereco: endereco,
+                    email: email
+                },
+                success: function(response) {
+                    try {
+                        var data = JSON.parse(response);
+                        alert(data.message);
+                        carregarClientes(); // Recarrega a lista de clientes
+                    } catch (e) {
+                        alert("Erro ao alterar cliente.");
+                    }
                 },
                 error: function() {
-                    alert("Erro ao alterar cliente.");
+                    alert("Erro na comunicação com o servidor.");
                 }
             });
-        }
+        });
+
+        // Carregar a lista de clientes inicialmente
+        carregarClientes();
+    });
+
     </script>
 </body>
 </html>

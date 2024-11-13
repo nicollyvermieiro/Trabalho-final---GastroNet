@@ -1,5 +1,5 @@
 <?php
-include_once('config/db_config.php');  // Inclui a configuração de banco de dados
+include_once(__DIR__ . '/../config/db_config.php');
 
 class Cardapio {
     private $id;
@@ -41,11 +41,7 @@ class Cardapio {
         global $conn;
         $sql = "SELECT * FROM cardapios";
         $result = $conn->query($sql);
-        $cardapios = [];
-        while ($row = $result->fetch_assoc()) {
-            $cardapios[] = $row;
-        }
-        return $cardapios;
+        return $result->fetch_all(MYSQLI_ASSOC);
     }
 }
 ?>

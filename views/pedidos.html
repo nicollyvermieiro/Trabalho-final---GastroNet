@@ -4,27 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pedidos - GastroNet</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="CSS/Pedidos.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <header>
-        <h1>Pedidos</h1>
+        <h1>Cadastro e Gerenciamento de Pedidos</h1>
         <nav>
-            <ul>
-                <li><a href="index.html">Voltar para a página principal</a></li>
-                <li><a href="clientes.html">Clientes</a></li>
-                <li><a href="funcionarios.html">Funcionários</a></li>
-                <li><a href="cardapio.html">Cardápio</a></li>
-            </ul>
+            <a href="index.html">Voltar para a página principal</a>
+            <a href="clientes.html">Clientes</a>
+            <a href="funcionarios.html">Funcionários</a>
+            <a href="cardapio.html">Cardápio</a>
         </nav>
-    </header>
 
     <section>
         <h2>Cadastrar Pedido</h2>
         <form id="cadastroPedido">
-            <label for="cliente">Cliente ID:</label>
-            <input type="text" id="cliente" name="cliente" required>
+
+            <label for="cliente">Cliente:</label>
+            <select id="cliente" name="cliente" required>
+                <!-- Clientes serão carregados aqui via AJAX -->
+            </select>
 
             <label for="itens">Itens:</label>
             <div id="itensContainer">
@@ -50,134 +49,153 @@
     </section>
 
     <script>
-        $(document).ready(function() {
-            // Carregar os itens do cardápio
-            function carregarItensCardapio() {
-                $.ajax({
-                    url: 'cardapio_provider.php', // Ajuste para o nome correto do seu arquivo PHP
-                    method: 'GET',
-                    success: function(data) {
-                        data.forEach(function(item) {
-                            $('#itensContainer').append(`
-                                <label>
-                                    <input type="checkbox" class="itemCardapio" data-preco="${item.preco}" value="${item.id}">
-                                    ${item.nome} - R$ ${item.preco}
-                                </label><br>
-                            `);
-                        });
+        // Função para carregar os clientes
+        function carregarClientes() {
+            fetch('../controllers/clienteController.php', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    acao: 'listar'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const clienteSelect = document.getElementById('cliente');
+                clienteSelect.innerHTML = '<option value="" disabled selected>Selecione um cliente</option>'; // Limpa a lista
 
-                        // Atualizar o valor total ao selecionar/deselecionar itens
-                        $('.itemCardapio').change(function() {
-                            atualizarValorTotal();
-                        });
-                    },
-                    error: function() {
-                        alert("Erro ao carregar os itens do cardápio.");
-                    }
-                });
-            }
+                if (data.message) {
+                    alert(data.message);
+                } else {
+                    data.forEach(cliente => {
+                        const option = document.createElement('option');
+                        option.value = cliente.id;
+                        option.textContent = cliente.nome;
+                        clienteSelect.appendChild(option);
+                    });
+                }
+            })
+            .catch(error => console.error('Erro ao carregar clientes:', error));
+        }
 
-            // Carregar pedidos ao iniciar a página
-            carregarItensCardapio();
+        // Função para carregar os itens do cardápio
+        function carregarItensCardapio() {
+            fetch('../controllers/cardapioController.php', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    acao: 'listar'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const itensContainer = document.getElementById('itensContainer');
+                itensContainer.innerHTML = '';  // Limpa os itens carregados
 
-            // Atualizar o valor total
-            function atualizarValorTotal() {
-                let valorTotal = 0;
-                $('.itemCardapio:checked').each(function() {
-                    valorTotal += parseFloat($(this).data('preco'));
-                });
-                $('#valorTotal').text(valorTotal.toFixed(2));
-            }
+                if (data.message) {
+                    alert(data.message);
+                } else {
+                    data.forEach(item => {
+                        const itemElement = document.createElement('div');
+                        itemElement.classList.add('item');
+                        itemElement.innerHTML = `
+                            <label>
+                                <input type="checkbox" class="item" data-id="${item.id}" data-nome="${item.nome}" data-preco="${item.preco}">
+                                ${item.nome} - R$ ${item.preco}
+                            </label>
+                        `;
+                        itensContainer.appendChild(itemElement);
+                    });
+                }
+            })
+            .catch(error => console.error('Erro ao carregar itens do cardápio:', error));
+        }
 
-            // Enviar dados do formulário para cadastrar um pedido
-            $('#cadastroPedido').submit(function(event) {
-                event.preventDefault(); // Impede o comportamento padrão do formulário
-
-                const cliente = $('#cliente').val();
-                const itensSelecionados = [];
-                $('.itemCardapio:checked').each(function() {
-                    itensSelecionados.push($(this).val());
-                });
-                const valorTotal = $('#valorTotal').text();
-                const formaPag = $('#formaPag').val();
-
-                // Enviar dados do pedido via AJAX para o backend
-                $.ajax({
-                    url: 'pedido_provider.php', // Ajuste para o nome correto do seu arquivo PHP
-                    method: 'POST',
-                    data: { cliente, itens: itensSelecionados, valor_total: valorTotal, forma_pag: formaPag },
-                    success: function() {
-                        alert('Pedido cadastrado com sucesso!');
-                        carregarPedidos(); // Atualiza a lista de pedidos após o cadastro
-                    },
-                    error: function() {
-                        alert("Erro ao cadastrar pedido.");
-                    }
+        // Função para cadastrar um novo pedido
+        document.getElementById('cadastroPedido').addEventListener('submit', function(event) {
+            event.preventDefault();
+    
+            // Pega o id do cliente selecionado
+            const cliente_id = document.getElementById('cliente').value;
+    
+            // Array para armazenar os itens selecionados
+            const itens = [];
+            document.querySelectorAll('.item:checked').forEach(item => {
+                itens.push({
+                    id: item.getAttribute('data-id'),
+                    nome: item.getAttribute('data-nome'),
+                    preco: item.getAttribute('data-preco')
                 });
             });
 
-            // Carregar a lista de pedidos
-            function carregarPedidos() {
-                $.ajax({
-                    url: 'pedido_provider.php', // Ajuste para o nome correto do seu arquivo PHP
-                    method: 'GET',
-                    success: function(data) {
-                        $('#listaPedidos').empty(); // Limpa a lista antes de adicionar
-                        data.forEach(function(pedido) {
-                            $('#listaPedidos').append(`
-                                <li>
-                                    Pedido #${pedido.num_pedido} - Cliente ${pedido.cliente}
-                                    <button onclick="buscarPedido(${pedido.id})">Buscar</button>
-                                    <button onclick="alterarPedido(${pedido.id})">Alterar</button>
-                                </li>
-                            `);
-                        });
-                    },
-                    error: function() {
-                        alert("Erro ao carregar a lista de pedidos.");
-                    }
-                });
-            }
+            // Calcula o valor total dos itens selecionados
+            let valor_total = 0;
+            itens.forEach(item => {
+                valor_total += parseFloat(item.preco);
+            });
 
-            // Função para buscar pedido por ID
-            function buscarPedido(id) {
-                $.ajax({
-                    url: 'pedido_provider.php', // Ajuste para o nome correto do seu arquivo PHP
-                    method: 'GET',
-                    data: { id },
-                    success: function(pedido) {
-                        alert('Pedido encontrado: ' + pedido.num_pedido);
-                    },
-                    error: function() {
-                        alert("Erro ao buscar pedido.");
-                    }
-                });
-            }
-
-            // Função para alterar pedido
-            
-            function alterarPedido(id) {
-                const numPedido = prompt("Digite o novo número do pedido:");
-                const cliente = prompt("Digite o novo cliente ID:");
-                const itens = prompt("Digite os novos itens:");
-                const valorTotal = prompt("Digite o novo valor total:");
-                const formaPag = prompt("Digite a nova forma de pagamento:");
-
-                // Envia os dados atualizados para o backend
-                $.ajax({
-                    url: 'pedido_provider.php', // Ajuste para o nome correto do seu arquivo PHP
-                    method: 'PUT',
-                    data: { id, num_pedido: numPedido, cliente: cliente, itens: itens, valor_total: valorTotal, forma_pag: formaPag },
-                    success: function() {
-                        alert('Pedido alterado com sucesso!');
-                        carregarPedidos(); // Atualiza a lista de pedidos após a alteração
-                    },
-                    error: function() {
-                        alert("Erro ao alterar pedido.");
-                    }
-                });
-            }
+            // Pega a forma de pagamento
+            const forma_pag = document.getElementById('formaPag').value;
+    
+            // Envia os dados para o backend via POST
+            fetch('../controllers/pedidoController.php', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    acao: 'salvar',
+                    cliente_id: cliente_id,
+                    itens: JSON.stringify(itens),
+                    valor_total: valor_total.toFixed(2),
+                    forma_pag: forma_pag
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === "Pedido cadastrado com sucesso!") {
+                    // Exibe os pedidos atualizados
+                    carregarPedidos();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error('Erro ao cadastrar pedido:', error));
         });
+    
+        // Função para carregar todos os pedidos
+        function carregarPedidos() {
+            fetch('../controllers/pedidoController.php', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    acao: 'listar'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const listaPedidos = document.getElementById('listaPedidos');
+                listaPedidos.innerHTML = '';  // Limpa a lista antes de recarregar
+    
+                if (data.message) {
+                    listaPedidos.innerHTML = `<p>${data.message}</p>`;
+                } else {
+                    data.forEach(pedido => {
+                        const pedidoElement = document.createElement('li');
+                        pedidoElement.classList.add('pedido-item');
+                        pedidoElement.innerHTML = `
+                            <strong>Pedido #${pedido.num_pedido}</strong><br>
+                            <strong>Cliente:</strong> ${pedido.cliente_nome}<br>
+                            <strong>Valor Total:</strong> R$ ${pedido.valor_total}<br>
+                            <strong>Forma de Pagamento:</strong> ${pedido.forma_pag}
+                        `;
+                        listaPedidos.appendChild(pedidoElement);
+                    });
+                }
+            })
+            .catch(error => console.error('Erro ao carregar pedidos:', error));
+        }
+
+        // Carregar os dados ao carregar a página
+        window.onload = function() {
+            carregarClientes();
+            carregarItensCardapio();
+            carregarPedidos();
+        };
     </script>
+
 </body>
 </html>

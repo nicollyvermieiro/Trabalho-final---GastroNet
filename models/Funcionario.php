@@ -1,5 +1,5 @@
 <?php
-include_once('config/db_config.php');
+include_once(__DIR__ . '/../config/db_config.php');
 
 class Funcionario {
     private $id;
@@ -43,4 +43,5 @@ class Funcionario {
         $result = $conn->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
+    
 }
