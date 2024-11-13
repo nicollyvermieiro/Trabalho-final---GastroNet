@@ -86,7 +86,7 @@
             var email = $('#emailCliente').val();
             
             $.ajax({
-                url: '../controllers/clienteControler.php',
+                url: '../controllers/clienteController.php',
                 method: 'POST',
                 data: {
                     acao: 'salvar',
@@ -96,6 +96,7 @@
                     email: email
                 },
                 success: function(response) {
+                    console.log(response);
                     try {
                         var data = JSON.parse(response);
                         alert(data.message);
@@ -113,7 +114,7 @@
         // Função para listar clientes
         function carregarClientes() {
             $.ajax({
-                url: '../controllers/clienteControler.php',
+                url: '../controllers/clienteController.php',
                 method: 'POST',
                 data: { acao: 'listar' },
                 success: function(response) {
@@ -138,7 +139,7 @@
             event.preventDefault();
             var id = $('#clienteId').val();
             $.ajax({
-                url: '../controllers/clienteControler.php',
+                url: '../controllers/clienteController.php',
                 method: 'POST',
                 data: { acao: 'buscar', id: id },
                 success: function(response) {
@@ -168,7 +169,7 @@
             var endereco = $('#alterarEndereco').val();
             var email = $('#alterarEmail').val();
             $.ajax({
-                url: '../controllers/clienteControler.php',
+                url: '../controllers/clienteController.php',
                 method: 'POST',
                 data: {
                     acao: 'alterar',
