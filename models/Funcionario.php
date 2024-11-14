@@ -20,26 +20,26 @@ class Funcionario {
 
     public function cadastrar() {
         global $conn;
-        $sql = "INSERT INTO funcionarios (nome, cargo, setor, login, senha) VALUES ('$this->nome', '$this->cargo', '$this->setor', '$this->login', '$this->senha')";
+        $sql = "INSERT INTO funcionario (nome, cargo, setor, login, senha) VALUES ('$this->nome', '$this->cargo', '$this->setor', '$this->login', '$this->senha')";
         return $conn->query($sql);
     }
 
     public function alterar() {
         global $conn;
-        $sql = "UPDATE funcionarios SET nome = '$this->nome', cargo = '$this->cargo', setor = '$this->setor', login = '$this->login', senha = '$this->senha' WHERE id = '$this->id'";
+        $sql = "UPDATE funcionario SET nome = '$this->nome', cargo = '$this->cargo', setor = '$this->setor', login = '$this->login', senha = '$this->senha' WHERE id = '$this->id'";
         return $conn->query($sql);
     }
 
     public static function buscar($id) {
         global $conn;
-        $sql = "SELECT * FROM funcionarios WHERE id = '$id'";
+        $sql = "SELECT * FROM funcionario WHERE id = '$id'";
         $result = $conn->query($sql);
         return $result->fetch_assoc();
     }
 
     public static function listar() {
         global $conn;
-        $sql = "SELECT * FROM funcionarios";
+        $sql = "SELECT * FROM funcionario";
         $result = $conn->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
     }

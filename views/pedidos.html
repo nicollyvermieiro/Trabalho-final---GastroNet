@@ -17,7 +17,7 @@
     </nav>
 
     <nav class="b">
-            <a href="index.html">Voltar</a>
+            <a href="index.html">Volta</a>
             <a href="clientes.html">Clientes</a>
             <a href="funcionarios.html">Funcionários</a>
             <a href="cardapio.html">Cardápio</a>
@@ -68,7 +68,7 @@
             .then(data => {
                 const clienteSelect = document.getElementById('cliente');
                 clienteSelect.innerHTML = '<option value="" disabled selected>Selecione um cliente</option>'; // Limpa a lista
-
+    
                 if (data.message) {
                     alert(data.message);
                 } else {
@@ -82,7 +82,7 @@
             })
             .catch(error => console.error('Erro ao carregar clientes:', error));
         }
-
+    
         // Função para carregar os itens do cardápio
         function carregarItensCardapio() {
             fetch('../controllers/cardapioController.php', {
@@ -95,7 +95,7 @@
             .then(data => {
                 const itensContainer = document.getElementById('itensContainer');
                 itensContainer.innerHTML = '';  // Limpa os itens carregados
-
+    
                 if (data.message) {
                     alert(data.message);
                 } else {
@@ -104,17 +104,32 @@
                         itemElement.classList.add('item');
                         itemElement.innerHTML = `
                             <label>
-                                <input type="checkbox" class="item" data-id="${item.id}" data-nome="${item.nome}" data-preco="${item.preco}">
-                                ${item.nome} - R$ ${item.preco}
+                                <input type="checkbox" class="item-checkbox" data-id="${item.id}" data-nome="${item.nome}" data-preco="${item.valor}">
+                                ${item.nome} - R$ ${parseFloat(item.valor).toFixed(2)}
                             </label>
+                            <p class="descricao">${item.descricao}</p>
                         `;
                         itensContainer.appendChild(itemElement);
                     });
                 }
+    
+                // Atualiza o valor total ao marcar/desmarcar itens
+                document.querySelectorAll('.item-checkbox').forEach(checkbox => {
+                    checkbox.addEventListener('change', atualizarValorTotal);
+                });
             })
             .catch(error => console.error('Erro ao carregar itens do cardápio:', error));
         }
-
+    
+        // Função para calcular e atualizar o valor total
+        function atualizarValorTotal() {
+            let valorTotal = 0;
+            document.querySelectorAll('.item-checkbox:checked').forEach(item => {
+                valorTotal += parseFloat(item.getAttribute('data-preco'));
+            });
+            document.getElementById('valorTotal').textContent = valorTotal.toFixed(2);
+        }
+    
         // Função para cadastrar um novo pedido
         document.getElementById('cadastroPedido').addEventListener('submit', function(event) {
             event.preventDefault();
@@ -124,20 +139,20 @@
     
             // Array para armazenar os itens selecionados
             const itens = [];
-            document.querySelectorAll('.item:checked').forEach(item => {
+            document.querySelectorAll('.item-checkbox:checked').forEach(item => {
                 itens.push({
                     id: item.getAttribute('data-id'),
                     nome: item.getAttribute('data-nome'),
                     preco: item.getAttribute('data-preco')
                 });
             });
-
+    
             // Calcula o valor total dos itens selecionados
             let valor_total = 0;
             itens.forEach(item => {
                 valor_total += parseFloat(item.preco);
             });
-
+    
             // Pega a forma de pagamento
             const forma_pag = document.getElementById('formaPag').value;
     
@@ -195,14 +210,14 @@
             })
             .catch(error => console.error('Erro ao carregar pedidos:', error));
         }
-
+    
         // Carregar os dados ao carregar a página
         window.onload = function() {
             carregarClientes();
             carregarItensCardapio();
             carregarPedidos();
         };
-    </script>
+    </script>    
 
 </body>
 </html>
