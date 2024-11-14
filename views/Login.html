@@ -10,12 +10,12 @@
 <body>
     <nav class="a">
         <div>
-            <img src="imgs/75837d9e-32c8-459e-913e-ac719ac12b2c.jfif" alt="Logo" class="logo">
+            <img src="imgs/logo.png" alt="Logo" class="logo">
         </div>
         <h2>Login do Funcionário</h2>
     </nav>
 
-    <section>
+    <nav class="b">
         <form id="loginForm">
             <label for="login">Login:</label>
             <input type="text" id="login" name="login" required>
@@ -26,8 +26,15 @@
             <button type="submit">Entrar</button>
         </form>
 
-        <p>Não tem uma conta? <a href="funcionarios.html">Cadastre-se aqui</a></p>
-    </section>
+        <div>
+            <p>Não tem uma conta?</p>
+            <button onclick="window.location.href='funcionarios.html'">Cadastre-se aqui</button>
+        </div>
+    </nav>
+
+    <footer>
+        <p>&copy; 2024 GastroNet</p>
+    </footer>
 
     <script>
         $(document).ready(function() {
