@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funcionários - GastroNet</title>
+    <link rel="stylesheet" href="CSS/CadastroFunc.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <nav class="a">
+        <div>
+            <img src="imgs/75837d9e-32c8-459e-913e-ac719ac12b2c.jfif" alt="Logo" class="logo">
+        </div>
+        <h2>Cadastro e Gerenciamento de Funcionários</h2>
+    </nav>
+    
+    <nav class="b">
+        <a href="index.html">Voltar para a página principal</a>
+        <a href="clientes.html">Clientes</a>
+        <a href="cardapio.html">Cardápio</a>
+        <a href="pedidos.html">Pedidos</a>
+    </nav>
+
+    <section>
+        <h2>Cadastrar Funcionário</h2>
+        <form id="cadastroFuncionario">
+            <label for="nomeFuncionario">Nome:</label>
+            <input type="text" id="nomeFuncionario" name="nomeFuncionario" required>
+
+            <label for="cargo">Cargo:</label>
+            <input type="text" id="cargo" name="cargo" required>
+
+            <label for="setor">Setor:</label>
+            <input type="text" id="setor" name="setor" required>
+
+            <label for="login">Login:</label>
+            <input type="text" id="login" name="login" required>
+
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required>
+
+            <button type="submit">Cadastrar</button>
+        </form>
+
+        <h2>Lista de Funcionários</h2>
+        <ul id="listaFuncionarios">
+            <!-- Lista de funcionários será carregada aqui via AJAX -->
+        </ul>
+
+        <h2>Buscar Funcionário</h2>
+        <form id="buscarFuncionarioForm">
+            <label for="funcionarioId">ID:</label>
+            <input type="number" id="funcionarioId" name="funcionarioId" required>
+            <button type="submit">Buscar</button>
+        </form>
+
+        <div id="funcionarioEncontrado"></div>
+
+        <h2>Alterar Funcionário</h2>
+        <form id="alterarFuncionarioForm">
+            <label for="alterarId">ID:</label>
+            <input type="number" id="alterarId" name="alterarId" required>
+
+            <label for="alterarNome">Nome:</label>
+            <input type="text" id="alterarNome" name="alterarNome" required>
+
+            <label for="alterarCargo">Cargo:</label>
+            <input type="text" id="alterarCargo" name="alterarCargo" required>
+
+            <label for="alterarSetor">Setor:</label>
+            <input type="text" id="alterarSetor" name="alterarSetor" required>
+
+            <label for="alterarLogin">Login:</label>
+            <input type="text" id="alterarLogin" name="alterarLogin" required>
+
+            <label for="alterarSenha">Senha:</label>
+            <input type="password" id="alterarSenha" name="alterarSenha" required>
+
+            <button type="submit">Alterar</button>
+        </form>
+    </section>
+
+    <script>
+        $(document).ready(function() {
+            // Função para cadastrar funcionário
+            $('#cadastroFuncionario').submit(function(event) {
+                event.preventDefault();
+                var nome = $('#nomeFuncionario').val();
+                var cargo = $('#cargo').val();
+                var setor = $('#setor').val();
+                var login = $('#login').val();
+                var senha = $('#senha').val();
+
+                $.ajax({
+                    url: '../controllers/funcionarioController.php',
+                    method: 'POST',
+                    data: {
+                        acao: 'salvar',
+                        nome: nome,
+                        cargo: cargo,
+                        setor: setor,
+                        login: login,
+                        senha: senha
+                    },
+                    success: function(response) {
+                        try {
+                            var data = JSON.parse(response);
+                            alert(data.message);
+                            carregarFuncionarios(); // Recarrega a lista de funcionários
+                        } catch (e) {
+                            alert("Erro na resposta do servidor.");
+                        }
+                    },
+                    error: function() {
+                        alert("Erro na comunicação com o servidor.");
+                    }
+                });
+            });
+
+            // Função para listar funcionários
+            function carregarFuncionarios() {
+                $.ajax({
+                    url: '../controllers/funcionarioController.php',
+                    method: 'POST',
+                    data: { acao: 'listar' },
+                    success: function(response) {
+                        try {
+                            var funcionarios = JSON.parse(response);
+                            $('#listaFuncionarios').html('');
+                            funcionarios.forEach(function(funcionario) {
+                                $('#listaFuncionarios').append('<li>' + funcionario.nome + ' - ' + funcionario.cargo + '</li>');
+                            });
+                        } catch (e) {
+                            alert("Erro ao carregar funcionários.");
+                        }
+                    },
+                    error: function() {
+                        alert("Erro na comunicação com o servidor.");
+                    }
+                });
+            }
+
+            // Função para buscar funcionário
+            $('#buscarFuncionarioForm').submit(function(event) {
+                event.preventDefault();
+                var id = $('#funcionarioId').val();
+                $.ajax({
+                    url: '../controllers/funcionarioController.php',
+                    method: 'POST',
+                    data: { acao: 'buscar', id: id },
+                    success: function(response) {
+                        try {
+                            var funcionario = JSON.parse(response);
+                            if (funcionario.message) {
+                                $('#funcionarioEncontrado').html(funcionario.message);
+                            } else {
+                                $('#funcionarioEncontrado').html('Nome: ' + funcionario.nome + '<br>Cargo: ' + funcionario.cargo);
+                            }
+                        } catch (e) {
+                            alert("Erro ao buscar funcionário.");
+                        }
+                    },
+                    error: function() {
+                        alert("Erro na comunicação com o servidor.");
+                    }
+                });
+            });
+
+            // Função para alterar funcionário
+            $('#alterarFuncionarioForm').submit(function(event) {
+                event.preventDefault();
+                var id = $('#alterarId').val();
+                var nome = $('#alterarNome').val();
+                var cargo = $('#alterarCargo').val();
+                var setor = $('#alterarSetor').val();
+                var login = $('#alterarLogin').val();
+                var senha = $('#alterarSenha').val();
+
+                $.ajax({
+                    url: '../controllers/funcionarioController.php',
+                    method: 'POST',
+                    data: {
+                        acao: 'alterar',
+                        id: id,
+                        nome: nome,
+                        cargo: cargo,
+                        setor: setor,
+                        login: login,
+                        senha: senha
+                    },
+                    success: function(response) {
+                        try {
+                            var data = JSON.parse(response);
+                            alert(data.message);
+                            carregarFuncionarios(); // Recarrega a lista de funcionários
+                        } catch (e) {
+                            alert("Erro ao alterar funcionário.");
+                        }
+                    },
+                    error: function() {
+                        alert("Erro na comunicação com o servidor.");
+                    }
+                });
+            });
+
+            // Carregar a lista de funcionários inicialmente
+            carregarFuncionarios();
+        });
+    </script>
+</body>
+</html>

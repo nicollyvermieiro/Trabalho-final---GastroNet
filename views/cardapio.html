@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio - GastroNet</title>
+    <link rel="stylesheet" href="CSS/Cardapio.css">
+</head>
+<body>
+    <nav class="a">
+        <div>
+            <img src="imgs/75837d9e-32c8-459e-913e-ac719ac12b2c.jfif" alt="Logo" class="logo">
+        </div>
+        <h2>Cadastro e Gerenciamento de Cardápios</h2>
+    </nav>
+
+    <nav class="b">
+        <a href="index.html">Voltar para a página principal</a>
+        <a href="funcionarios.html">Funcionários</a>
+        <a href="clientes.html">Clientes</a>
+        <a href="pedidos.html">Pedidos</a>
+    </nav>
+
+    <section>
+        <h2>Adicionar Novo Cardápio</h2>
+        <form id="formCardapio">
+            <label for="nome">Nome do item:</label>
+            <input type="text" id="nome" name="nome" required>
+
+            <label for="descricao">Descrição:</label>
+            <textarea id="descricao" name="descricao" rows="4" required></textarea>
+
+            <label for="valor">Valor:</label>
+            <div class="valor-container">
+                <span class="currency-symbol">R$</span>
+                <input type="number" id="valor" name="valor" step="0.01" required>
+            </div>
+
+            <button type="submit">Adicionar Cardápio</button>
+        </form>
+
+        <h2>Cardápios Cadastrados</h2>
+        <div id="cardapiosList">
+            <!-- Os cardápios cadastrados serão carregados aqui -->
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('formCardapio').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Coleta os dados do formulário
+            const nome = document.getElementById('nome').value;
+            const descricao = document.getElementById('descricao').value;
+            const valor = document.getElementById('valor').value;
+
+            // Envia os dados para o backend via POST
+            fetch('../controllers/CardapioController.php', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    acao: 'salvar',
+                    nome: nome,
+                    descricao: descricao,
+                    valor: valor
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === "Cardápio cadastrado com sucesso!") {
+                    // Exibe os cardápios atualizados
+                    carregarCardapios();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => console.error('Erro ao cadastrar cardápio:', error));
+        });
+
+        // Função para carregar todos os cardápios
+        function carregarCardapios() {
+            fetch('../controllers/CardapioController.php', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    acao: 'listar'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const cardapiosList = document.getElementById('cardapiosList');
+                cardapiosList.innerHTML = '';  // Limpa a lista antes de recarregar
+
+                if (data.message) {
+                    cardapiosList.innerHTML = `<p>${data.message}</p>`;
+                } else {
+                    data.forEach(cardapio => {
+                        const cardapioElement = document.createElement('div');
+                        cardapioElement.classList.add('cardapio-item');
+                        cardapioElement.innerHTML = `
+                            <h3>${cardapio.nome}</h3>
+                            <p class="descricao"><strong>Descrição:</strong> ${cardapio.descricao}</p>
+                            <p class="valor"><strong>Valor:</strong> R$ ${cardapio.valor}</p>
+                        `;
+                        cardapiosList.appendChild(cardapioElement);
+                    });
+                }
+            })
+            .catch(error => console.error('Erro ao carregar cardápios:', error));
+        }
+
+
+        // Carregar os cardápios ao carregar a página
+        window.onload = carregarCardapios;
+    </script>
+</body>
+</html>

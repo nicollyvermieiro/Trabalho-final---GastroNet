@@ -1,0 +1,99 @@
+/* tela */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #5e0a0a;
+}
+
+/* Barra superior */
+.b {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ac7c16;
+    padding: 15px 20px;
+    color: #fff;
+    position: fixed; /* sempre deixa a barra presente */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* prioridade */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* sombra */
+}
+
+/* titulo da tela */
+.b h1 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* logo do restaurante */
+.logo {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    margin-right: 20px;
+}
+
+/* Barra de navegação dos botões */
+.a {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    margin-top: 80px;
+    padding: 20px;
+    gap: 15px;
+}
+
+/* Botoes */
+.a a {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    background-color: #ac7c16;
+    color: #f5f5f5;
+    width: 170px;
+    height: 170px;
+    border-radius: 8px; /* deixa a boda redonda */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* sombra */
+    transition: transform 0.2s ease, background-color 0.3s ease; /* animação do botao */
+    padding-bottom: 15px; /* Espaço para o texto */
+    text-decoration: none; /* usa para tirar sumblinhado do icone */
+}
+
+/* efeito botao com o mouse*/
+.a a:hover {
+    background-color: #eba818;
+    transform: translateY(-5px);
+}
+
+/* icones para botoes */
+.a a::before {
+    content: "🍔";
+    font-size: 3em;
+    margin-bottom: auto;
+}
+
+/* Rodapé da tela */
+footer {
+    background-color: #ac7c16;
+    color: #222222;
+    text-align: center;
+    padding: 15px 20px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* sombra */
+}

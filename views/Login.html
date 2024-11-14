@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - GastroNet</title>
+    <link rel="stylesheet" href="CSS/login.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <nav class="a">
+        <div>
+            <img src="imgs/75837d9e-32c8-459e-913e-ac719ac12b2c.jfif" alt="Logo" class="logo">
+        </div>
+        <h2>Login do Funcionário</h2>
+    </nav>
+
+    <section>
+        <form id="loginForm">
+            <label for="login">Login:</label>
+            <input type="text" id="login" name="login" required>
+
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required>
+
+            <button type="submit">Entrar</button>
+        </form>
+
+        <p>Não tem uma conta? <a href="funcionarios.html">Cadastre-se aqui</a></p>
+    </section>
+
+    <script>
+        $(document).ready(function() {
+            // Função para realizar o login
+            $('#loginForm').submit(function(event) {
+                event.preventDefault();
+                var login = $('#login').val();
+                var senha = $('#senha').val();
+
+                $.ajax({
+                    url: '../controllers/funcionarioController.php',
+                    method: 'POST',
+                    data: {
+                        acao: 'login',
+                        login: login,
+                        senha: senha
+                    },
+                    success: function(response) {
+                        try {
+                            var data = JSON.parse(response);
+                            if (data.success) {
+                                // Salva as informações do funcionário no localStorage
+                                localStorage.setItem('loggedIn', true);
+                                localStorage.setItem('funcionarioId', data.funcionario.id);
+                                window.location.href = 'index.html'; // Redireciona para a página principal
+                            } else {
+                                alert(data.message);
+                            }
+                        } catch (e) {
+                            alert("Erro na resposta do servidor.");
+                        }
+                    },
+                    error: function() {
+                        alert("Erro na comunicação com o servidor.");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
