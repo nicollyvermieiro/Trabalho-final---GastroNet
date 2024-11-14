@@ -20,29 +20,30 @@ class Pedido {
 
     public function cadastrar() {
         global $conn;
-        $sql = "INSERT INTO pedidos (num_pedido, cliente_id, itens, valor_total, forma_pag) 
-                VALUES ('$this->num_pedido', '$this->cliente', '$this->itens', '$this->valor_total', '$this->forma_pag)";
+        $sql = "INSERT INTO pedido (num_pedido, cliente_id, itens, valor_total, forma_pag) 
+                VALUES ('$this->num_pedido', '$this->cliente', '$this->itens', '$this->valor_total', '$this->forma_pag')";
         return $conn->query($sql);
     }
 
     public function alterar() {
         global $conn;
-        $sql = "UPDATE pedidos SET num_pedido = '$this->num_pedido', cliente_id = '$this->cliente', itens = '$this->itens', 
+        $sql = "UPDATE pedido SET num_pedido = '$this->num_pedido', cliente_id = '$this->cliente', itens = '$this->itens', 
                 valor_total = '$this->valor_total', forma_pag = '$this->forma_pag' WHERE id = '$this->id'";
         return $conn->query($sql);
     }
 
     public static function buscar($id) {
         global $conn;
-        $sql = "SELECT * FROM pedidos WHERE id = '$id'";
+        $sql = "SELECT * FROM pedido WHERE id = '$id'";
         $result = $conn->query($sql);
         return $result->fetch_assoc();
     }
 
     public static function listar() {
         global $conn;
-        $sql = "SELECT * FROM pedidos";
+        $sql = "SELECT * FROM pedido";
         $result = $conn->query($sql);
         return $result->fetch_all(MYSQLI_ASSOC);
     }
 }
+?>
