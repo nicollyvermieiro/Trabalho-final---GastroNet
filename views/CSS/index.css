@@ -7,7 +7,7 @@
 }
 
 body {
-    background-color: pink;
+    background-color: #5e0a0a;
 }
 
 /* Barra superior */
@@ -76,6 +76,7 @@ body {
 .a a:hover {
     background-color: #eba818;
     transform: translateY(-5px);
+    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.3); /* luz */
 }
 
 /* icones para botoes */

@@ -77,13 +77,30 @@ button {
 /* efeito botao com o mouse */
 button:hover {
     background-color: #eba818;
+    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.3); /* luz */
 }
 
-#formulario, #listaCardapios {
-    margin-top: 20px;
-    color: #adadad;
-    font-weight: bold;
+section {
+    flex-wrap: wrap;
+    padding: 20px;
+    color: #fff;
 }
+
+section h2 {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* sombra */
+    transition: transform 0.2s ease, color 0.3s ease;
+}
+
+section h2:hover {
+    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.3); /* luz */
+    color: #eba818;
+}
+
+section div {
+    padding: 10px;
+}
+
+
 
 label {
     display: block;

@@ -6,6 +6,7 @@
     <title>Pedidos - GastroNet</title>
     <link rel="stylesheet" href="CSS/Pedidos.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="JS/pedidos.js"></script>
 </head>
 <body>
 
@@ -17,206 +18,49 @@
     </nav>
 
     <nav class="b">
-            <a href="index.html">Volta</a>
-            <a href="clientes.html">Clientes</a>
-            <a href="funcionarios.html">Funcionários</a>
-            <a href="cardapio.html">Cardápio</a>
+        <button onclick="window.location.href='index.html'">Tela Principal</button>
+        <button onclick="window.location.href='funcionarios.html'">Funcionários</button>
+        <button onclick="window.location.href='clientes.html'">Clientes</button>
+        <button onclick="window.location.href='cardapio.html'">Cardapios</button>
     </nav>
 
     <section>
-        <h2>Cadastrar Pedido</h2>
-        <form id="cadastroPedido">
+        <div>
+            <h2 onclick="$('#cadastroPedido').toggle()">Cadastrar Pedido</h2>
+            <form id="cadastroPedido" style="display: none;">
+                <label for="Cliente">Cliente:</label>
+                <select id="listaCliente" name="cliente" required>
+                    <!-- Clientes serão carregados aqui via AJAX -->
+                </select>
 
-            <label for="cliente">Cliente:</label>
-            <select id="cliente" name="cliente" required>
-                <!-- Clientes serão carregados aqui via AJAX -->
-            </select>
+                <label for="Itens">Itens:</label>
+                <select id="listaItens" name="item" required>
+                    <!-- Os itens serão carregados aqui via AJAX -->
+                </select>
 
-            <label for="itens">Itens:</label>
-            <div id="itensContainer">
-                <!-- Os itens serão carregados aqui via AJAX -->
-            </div>
+                <label for="valorTotal">Valor Total: R$ <span id="valorTotal">0.00</span></label>
 
-            <label for="valorTotal">Valor Total: R$ <span id="valorTotal">0.00</span></label>
+                <label for="formaPag">Forma de Pagamento:</label>
+                <select id="formaPag" name="formaPag" required>
+                    <option value="dinheiro">Dinheiro</option>
+                    <option value="pix">Pix</option>
+                    <option value="cartao">Cartão</option>
+                </select>
 
-            <label for="formaPag">Forma de Pagamento:</label>
-            <select id="formaPag" name="formaPag" required>
-                <option value="dinheiro">Dinheiro</option>
-                <option value="pix">Pix</option>
-                <option value="cartao">Cartão</option>
-            </select>
+                <button type="submit">Cadastrar Pedido</button>
+            </form>
+        </div>
 
-            <button type="submit">Cadastrar Pedido</button>
-        </form>
+        <div>
+            <h2 onclick="$('#listaPedido').toggle()">Lista de Pedidos</h2>
+            <ul id="listaPedido" style="display: none;">
+                <!-- Lista de Pedidos será carregada aqui via AJAX -->
+            </ul>
+        </div>
 
-        <h2>Lista de Pedidos</h2>
-        <ul id="listaPedidos">
-            <!-- Lista de pedidos será carregada aqui via AJAX -->
-        </ul>
     </section>
 
     <script>
-        // Função para carregar os clientes
-        function carregarClientes() {
-            fetch('../controllers/clienteController.php', {
-                method: 'POST',
-                body: new URLSearchParams({
-                    acao: 'listar'
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const clienteSelect = document.getElementById('cliente');
-                clienteSelect.innerHTML = '<option value="" disabled selected>Selecione um cliente</option>'; // Limpa a lista
-    
-                if (data.message) {
-                    alert(data.message);
-                } else {
-                    data.forEach(cliente => {
-                        const option = document.createElement('option');
-                        option.value = cliente.id;
-                        option.textContent = cliente.nome;
-                        clienteSelect.appendChild(option);
-                    });
-                }
-            })
-            .catch(error => console.error('Erro ao carregar clientes:', error));
-        }
-    
-        // Função para carregar os itens do cardápio
-        function carregarItensCardapio() {
-            fetch('../controllers/cardapioController.php', {
-                method: 'POST',
-                body: new URLSearchParams({
-                    acao: 'listar'
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const itensContainer = document.getElementById('itensContainer');
-                itensContainer.innerHTML = '';  // Limpa os itens carregados
-    
-                if (data.message) {
-                    alert(data.message);
-                } else {
-                    data.forEach(item => {
-                        const itemElement = document.createElement('div');
-                        itemElement.classList.add('item');
-                        itemElement.innerHTML = `
-                            <label>
-                                <input type="checkbox" class="item-checkbox" data-id="${item.id}" data-nome="${item.nome}" data-preco="${item.valor}">
-                                ${item.nome} - R$ ${parseFloat(item.valor).toFixed(2)}
-                            </label>
-                            <p class="descricao">${item.descricao}</p>
-                        `;
-                        itensContainer.appendChild(itemElement);
-                    });
-                }
-    
-                // Atualiza o valor total ao marcar/desmarcar itens
-                document.querySelectorAll('.item-checkbox').forEach(checkbox => {
-                    checkbox.addEventListener('change', atualizarValorTotal);
-                });
-            })
-            .catch(error => console.error('Erro ao carregar itens do cardápio:', error));
-        }
-    
-        // Função para calcular e atualizar o valor total
-        function atualizarValorTotal() {
-            let valorTotal = 0;
-            document.querySelectorAll('.item-checkbox:checked').forEach(item => {
-                valorTotal += parseFloat(item.getAttribute('data-preco'));
-            });
-            document.getElementById('valorTotal').textContent = valorTotal.toFixed(2);
-        }
-    
-        // Função para cadastrar um novo pedido
-        document.getElementById('cadastroPedido').addEventListener('submit', function(event) {
-            event.preventDefault();
-    
-            // Pega o id do cliente selecionado
-            const cliente_id = document.getElementById('cliente').value;
-    
-            // Array para armazenar os itens selecionados
-            const itens = [];
-            document.querySelectorAll('.item-checkbox:checked').forEach(item => {
-                itens.push({
-                    id: item.getAttribute('data-id'),
-                    nome: item.getAttribute('data-nome'),
-                    preco: item.getAttribute('data-preco')
-                });
-            });
-    
-            // Calcula o valor total dos itens selecionados
-            let valor_total = 0;
-            itens.forEach(item => {
-                valor_total += parseFloat(item.preco);
-            });
-    
-            // Pega a forma de pagamento
-            const forma_pag = document.getElementById('formaPag').value;
-    
-            // Envia os dados para o backend via POST
-            fetch('../controllers/pedidoController.php', {
-                method: 'POST',
-                body: new URLSearchParams({
-                    acao: 'salvar',
-                    cliente_id: cliente_id,
-                    itens: JSON.stringify(itens),
-                    valor_total: valor_total.toFixed(2),
-                    forma_pag: forma_pag
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message === "Pedido cadastrado com sucesso!") {
-                    // Exibe os pedidos atualizados
-                    carregarPedidos();
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => console.error('Erro ao cadastrar pedido:', error));
-        });
-    
-        // Função para carregar todos os pedidos
-        function carregarPedidos() {
-            fetch('../controllers/pedidoController.php', {
-                method: 'POST',
-                body: new URLSearchParams({
-                    acao: 'listar'
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const listaPedidos = document.getElementById('listaPedidos');
-                listaPedidos.innerHTML = '';  // Limpa a lista antes de recarregar
-    
-                if (data.message) {
-                    listaPedidos.innerHTML = `<p>${data.message}</p>`;
-                } else {
-                    data.forEach(pedido => {
-                        const pedidoElement = document.createElement('li');
-                        pedidoElement.classList.add('pedido-item');
-                        pedidoElement.innerHTML = `
-                            <strong>Pedido #${pedido.num_pedido}</strong><br>
-                            <strong>Cliente:</strong> ${pedido.cliente_nome}<br>
-                            <strong>Valor Total:</strong> R$ ${pedido.valor_total}<br>
-                            <strong>Forma de Pagamento:</strong> ${pedido.forma_pag}
-                        `;
-                        listaPedidos.appendChild(pedidoElement);
-                    });
-                }
-            })
-            .catch(error => console.error('Erro ao carregar pedidos:', error));
-        }
-    
-        // Carregar os dados ao carregar a página
-        window.onload = function() {
-            carregarClientes();
-            carregarItensCardapio();
-            carregarPedidos();
-        };
     </script>    
 
 </body>
