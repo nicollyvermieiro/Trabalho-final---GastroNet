@@ -45,16 +45,6 @@ body {
     margin-right: 20px;
 }
 
-/* Barra de navegação dos botões */
-.b {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    margin-top: 80px;
-    padding: 50px;
-    gap: 15px;
-}
-
 /* Botoes */
 button {
     width: 80px;
@@ -68,36 +58,27 @@ button {
     text-decoration: none; /* usa para tirar sumblinhado do icone */
 }
 
-.b button {
-    width: 180px;
-    height: 70px;
-    font-size: 20px;
-}
-
 /* efeito botao com o mouse */
 button:hover {
     background-color: #eba818;
-    box-shadow: 0 8px 12px rgba(255, 255, 255, 0.1); /* luz */
 }
 
-section {
+.b {
     flex-wrap: wrap;
-    padding: 20px;
+    margin-top: 80px;
+    padding: 50px;
+    gap: 15px;
     color: #fff;
+    font-weight: bold;
+    text-decoration: none; /* usa para tirar sumblinhado do icone */
 }
 
-section h2 {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* sombra */
-    transition: transform 0.2s ease, color 0.3s ease;
+.b div {
+    margin-top: 80px;
 }
 
-section h2:hover {
-    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1); /* luz */
-    color: #eba818;
-}
-
-section div {
-    padding: 10px;
+.b div button {
+    width: 130px;
 }
 
 label {

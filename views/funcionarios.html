@@ -10,75 +10,83 @@
 <body>
     <nav class="a">
         <div>
-            <img src="imgs/75837d9e-32c8-459e-913e-ac719ac12b2c.jfif" alt="Logo" class="logo">
+            <img src="imgs/logo.png" alt="Logo" class="logo">
         </div>
         <h2>Cadastro e Gerenciamento de Funcionários</h2>
     </nav>
     
     <nav class="b">
-        <a href="index.html">Voltar para a página principal</a>
-        <a href="clientes.html">Clientes</a>
-        <a href="cardapio.html">Cardápio</a>
-        <a href="pedidos.html">Pedidos</a>
+        <button onclick="window.location.href='index.html'">Tela Principal</button>
+        <button onclick="window.location.href='clientes.html'">Clientes</button>
+        <button onclick="window.location.href='cardapio.html'">Cardápio</button>
+        <button onclick="window.location.href='pedidos.html'">Pedidos</button>
     </nav>
 
     <section>
-        <h2>Cadastrar Funcionário</h2>
-        <form id="cadastroFuncionario">
-            <label for="nomeFuncionario">Nome:</label>
-            <input type="text" id="nomeFuncionario" name="nomeFuncionario" required>
+        <div>
+            <h2 onclick="$('#cadastroFuncionario').toggle()">Cadastrar Funcionário</a></h2>
+            <form id="cadastroFuncionario" style="display: none;">
+                <label for="nomeFuncionario">Nome:</label>
+                <input type="text" id="nomeFuncionario" name="nomeFuncionario" required>
 
-            <label for="cargo">Cargo:</label>
-            <input type="text" id="cargo" name="cargo" required>
+                <label for="cargo">Cargo:</label>
+                <input type="text" id="cargo" name="cargo" required>
 
-            <label for="setor">Setor:</label>
-            <input type="text" id="setor" name="setor" required>
+                <label for="setor">Setor:</label>
+                <input type="text" id="setor" name="setor" required>
 
-            <label for="login">Login:</label>
-            <input type="text" id="login" name="login" required>
+                <label for="login">Login:</label>
+                <input type="text" id="login" name="login" required>
 
-            <label for="senha">Senha:</label>
-            <input type="password" id="senha" name="senha" required>
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha" name="senha" required>
 
-            <button type="submit">Cadastrar</button>
-        </form>
+                <button type="submit">Cadastrar</button>
+            </form>
+        </div>
 
-        <h2>Lista de Funcionários</h2>
-        <ul id="listaFuncionarios">
-            <!-- Lista de funcionários será carregada aqui via AJAX -->
-        </ul>
+        <div>
+            <h2 onclick="$('#listaFuncionarios').toggle()">Lista de Funcionários</a></h2>
+            <ul id="listaFuncionarios" style="display: none;">
+                <!-- Lista de funcionários será carregada aqui via AJAX -->
+            </ul>
+        </div>
 
-        <h2>Buscar Funcionário</h2>
-        <form id="buscarFuncionarioForm">
-            <label for="funcionarioId">ID:</label>
-            <input type="number" id="funcionarioId" name="funcionarioId" required>
-            <button type="submit">Buscar</button>
-        </form>
+        <div>
+            <h2 onclick="$('#buscarFuncionarioForm').toggle()">Buscar Funcionário</a></h2>
+            <form id="buscarFuncionarioForm" style="display: none;">
+                <label for="funcionarioId">ID:</label>
+                <input type="number" id="funcionarioId" name="funcionarioId" required>
+                <button type="submit">Buscar</button>
+            </form>
 
-        <div id="funcionarioEncontrado"></div>
+            <div id="funcionarioEncontrado"></div>
+        </div>
 
-        <h2>Alterar Funcionário</h2>
-        <form id="alterarFuncionarioForm">
-            <label for="alterarId">ID:</label>
-            <input type="number" id="alterarId" name="alterarId" required>
+        <div>
+            <h2 onclick="$('#alterarFuncionarioForm').toggle()">Alterar Funcionário</a></h2>
+            <form id="alterarFuncionarioForm" style="display: none;">
+                <label for="alterarId">ID:</label>
+                <input type="number" id="alterarId" name="alterarId" required>
 
-            <label for="alterarNome">Nome:</label>
-            <input type="text" id="alterarNome" name="alterarNome" required>
+                <label for="alterarNome">Nome:</label>
+                <input type="text" id="alterarNome" name="alterarNome" required>
 
-            <label for="alterarCargo">Cargo:</label>
-            <input type="text" id="alterarCargo" name="alterarCargo" required>
+                <label for="alterarCargo">Cargo:</label>
+                <input type="text" id="alterarCargo" name="alterarCargo" required>
 
-            <label for="alterarSetor">Setor:</label>
-            <input type="text" id="alterarSetor" name="alterarSetor" required>
+                <label for="alterarSetor">Setor:</label>
+                <input type="text" id="alterarSetor" name="alterarSetor" required>
 
-            <label for="alterarLogin">Login:</label>
-            <input type="text" id="alterarLogin" name="alterarLogin" required>
+                <label for="alterarLogin">Login:</label>
+                <input type="text" id="alterarLogin" name="alterarLogin" required>
 
-            <label for="alterarSenha">Senha:</label>
-            <input type="password" id="alterarSenha" name="alterarSenha" required>
+                <label for="alterarSenha">Senha:</label>
+                <input type="password" id="alterarSenha" name="alterarSenha" required>
 
-            <button type="submit">Alterar</button>
-        </form>
+                <button type="submit">Alterar</button>
+            </form>
+        </div>
     </section>
 
     <script>
