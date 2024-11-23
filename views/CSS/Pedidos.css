@@ -75,6 +75,7 @@ button {
     font-size: 20px;
 }
 
+
 /* Efeito hover para botões */
 button:hover {
     background-color: #eba818;
@@ -127,24 +128,43 @@ form select, form input[type="checkbox"], input {
     color: #333;
 }
 
-/* Lista de pedidos */
-ul#listaPedidos {
-    list-style: none;
+
+/* Estilos para a lista de pedidos */
+#listaPedido {
+    list-style-type: none;
     padding: 0;
+    margin: 0;
+    max-height: 400px;
+    overflow-y: auto;
 }
 
-ul#listaPedidos li {
-    background-color: #fff;
-    padding: 10px;
-    margin-bottom: 10px;
+.pedido-item {
+    background-color: #f0bf55;
+
+    border: 1px solid #ddd;
     border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
 }
 
-ul#listaPedidos li strong {
+.pedido-item:hover {
+    background-color: #eba818;
+}
+
+.pedido-item strong {
     color: #333;
 }
 
+
+.pedido-item .pedido-info {
+    margin-top: 10px;
+    color: #555;
+}
+
+.pedido-item .pedido-info span {
+    font-weight: bold;
+}
 /* Rodapé da tela */
 footer {
     background-color: #ac7c16;

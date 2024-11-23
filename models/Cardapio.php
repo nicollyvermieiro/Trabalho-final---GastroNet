@@ -6,25 +6,27 @@ class Cardapio {
     private $nome;
     private $descricao;
     private $valor;
+    private $categoria;
 
-    public function __construct($nome, $descricao, $valor, $id = null) {
+    public function __construct($nome, $descricao, $valor, $categoria, $id= null) {
         $this->id = $id;
         $this->nome = $nome;
         $this->descricao = $descricao;
         $this->valor = $valor;
+        $this->categoria = $categoria;  
     }
 
     // Método para cadastrar um cardápio no banco de dados
     public function cadastrar() {
         global $conn;
-        $sql = "INSERT INTO cardapio (nome, descricao, valor) VALUES ('$this->nome', '$this->descricao', '$this->valor')";
+        $sql = "INSERT INTO cardapio (nome, descricao, valor, categoria) VALUES ('$this->nome', '$this->descricao', '$this->valor', '$this->categoria')";
         return $conn->query($sql);
     }
 
     // Método para alterar um cardápio no banco de dados
     public function alterar() {
         global $conn;
-        $sql = "UPDATE cardapio SET nome='$this->nome', descricao='$this->descricao', valor='$this->valor' WHERE id=$this->id";
+        $sql = "UPDATE cardapio SET nome='$this->nome', descricao='$this->descricao', valor='$this->valor', categoria='$this->categoria' WHERE id=$this->id";
         return $conn->query($sql);
     }
 

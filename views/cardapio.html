@@ -39,16 +39,69 @@
                     <input type="number" id="Valor" name="Valor" step="0.01" required>
                 </div>
 
+                <label for="Categoria">Categoria:</label>
+                <select id="Categoria" name="Categoria" required>
+                    <option value="Lanches">Lanches</option>
+                    <option value="Porcao">Porções</option>
+                    <option value="Sobremesa">Sobremesa</option>
+                    <option value="Bebida">Bebida</option>
+                    <!-- Adicione outras categorias conforme necessário -->
+                </select>
+
+
                 <button type="submit">Adicionar Cardápio</button>
             </form>
         </div>
 
         <div>
-            <h2 onclick="$('#listaCardapio').toggle()">Cardápios Cadastrados</h2>
-            <ul id="listaCardapio" style="display: none;">
-                <!-- Lista de Cardapios será carregada aqui via AJAX -->
-            </ul>
+            <h2 onclick="$('#listaCardapios').toggle()">Cardápios Cadastrados</h2>
+            <table id="listaCardapios" style="display: none; width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Categoria</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Itens de cardápio serão inseridos aqui via AJAX -->
+                </tbody>
+            </table>
         </div>
+
+        <div>
+            <h2 onclick="$('#alterarCardapioForm').toggle()">Alterar Cardápio</h2>
+            <form id="alterarCardapioForm" style="display: none;">
+                <label for="alterarId">Id do item:</label>
+                <input type="text" id="alterarId" name="alterarId" required>
+
+                <label for="alterarItem">Nome do item:</label>
+                <input type="text" id="alterarItem" name="alterarItem" required>
+
+                <label for="alterarDescricao">Descrição:</label>
+                <textarea id="alterarDescricao" name="alterarDescricao" rows="4" required></textarea>
+
+                <label for="alteraValor">Valor:</label>
+                <div class="Valor-container">
+                    <span class="currency-symbol">R$</span>
+                    <input type="number" id="alteraValor" name="alteraValor" step="0.01" required>
+                </div>
+
+                <label for="alteraCategoria">Categoria:</label>
+                <select id="alteraCategoria" name="alteraCategoria" required>
+                    <option value="Lanches">Lanches</option>
+                    <option value="Porcao">Porções</option>
+                    <option value="Sobremesa">Sobremesa</option>
+                    <option value="Bebida">Bebida</option>
+                    <!-- Adicione outras categorias conforme necessário -->
+                </select>
+
+                <button type="submit">Alterar</button>
+            </form>
+        </div>
+        
     </section>
 
     <script>

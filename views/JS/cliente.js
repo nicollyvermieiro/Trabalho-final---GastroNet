@@ -1,19 +1,30 @@
 $(document).ready(function() {
+    // Aplicar a máscara no campo de telefone na criação e alteração
+    $('#telefone, #alterarTelefone').mask('(00) 00000-0000');
+
     // Função para cadastrar cliente
     $('#cadastroCliente').submit(function(event) {
         event.preventDefault();
-        var nome = $('#nomeCliente').val();
-        var telefone = $('#telefone').val();
-        var endereco = $('#endereco').val();
-        var email = $('#emailCliente').val();
-        
+
+        var nome = $('#nomeCliente').val().trim();
+        var telefone = $('#telefone').cleanVal(); // Remove a máscara
+        var endereco = $('#endereco').val().trim();
+        var email = $('#emailCliente').val().trim();
+
+        // Verificar se todos os campos estão preenchidos
+        if (!nome || !telefone || !endereco || !email) {
+            alert("Todos os campos são obrigatórios!");
+            return; // Interrompe o envio
+        }
+
+        // Se todos os campos estiverem preenchidos, faz o envio
         $.ajax({
             url: '../controllers/clienteController.php',
             method: 'POST',
             data: {
                 acao: 'salvar',
                 nome: nome,
-                telefone: telefone,
+                telefone: telefone, // Telefone sem máscara
                 endereco: endereco,
                 email: email
             },
@@ -42,10 +53,40 @@ $(document).ready(function() {
             success: function(response) {
                 try {
                     var clientes = JSON.parse(response);
-                    $('#listaClientes').html('');
+
+                    // Cabeçalho da tabela
+                    var tabela = `
+                        <table border="1" style="width:100%; border-collapse:collapse;">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Telefone</th>
+                                    <th>Endereço</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    // Adicionando os clientes na tabela
                     clientes.forEach(function(cliente) {
-                        $('#listaClientes').append('<li>' + cliente.nome + ' - ' + cliente.telefone + '</li>');
+                        tabela += `
+                            <tr>
+                                <td>${cliente.id}</td>
+                                <td>${cliente.nome}</td>
+                                <td>${cliente.telefone}</td>
+                                <td>${cliente.endereco}</td>
+                            </tr>
+                        `;
                     });
+
+                    tabela += `
+                            </tbody>
+                        </table>
+                    `;
+
+                    // Insere a tabela no elemento com ID 'listaClientes'
+                    $('#listaClientes').html(tabela);
                 } catch (e) {
                     alert("Erro ao carregar clientes.");
                 }
@@ -55,6 +96,7 @@ $(document).ready(function() {
             }
         });
     }
+    
 
     // Função para buscar cliente
     $('#buscarClienteForm').submit(function(event) {
@@ -70,7 +112,7 @@ $(document).ready(function() {
                     if (cliente.message) {
                         $('#clienteEncontrado').html(cliente.message);
                     } else {
-                        $('#clienteEncontrado').html('Nome: ' + cliente.nome + '<br>Telefone: ' + cliente.telefone);
+                        $('#clienteEncontrado').html('Nome: ' + cliente.nome + '<br>Telefone: ' + cliente.telefone + '<br>Endereço: ' + cliente.endereco);
                     }
                 } catch (e) {
                     alert("Erro ao buscar cliente.");
@@ -85,11 +127,20 @@ $(document).ready(function() {
     // Função para alterar cliente
     $('#alterarClienteForm').submit(function(event) {
         event.preventDefault();
+        
         var id = $('#alterarId').val();
-        var nome = $('#alterarNome').val();
-        var telefone = $('#alterarTelefone').val();
-        var endereco = $('#alterarEndereco').val();
-        var email = $('#alterarEmail').val();
+        var nome = $('#alterarNome').val().trim();
+        var telefone = $('#alterarTelefone').cleanVal(); // Remove a máscara
+        var endereco = $('#alterarEndereco').val().trim();
+        var email = $('#alterarEmail').val().trim();
+
+        // Verificar se todos os campos estão preenchidos
+        if (!id || !nome || !telefone || !endereco || !email) {
+            alert("Todos os campos são obrigatórios!");
+            return; // Interrompe o envio
+        }
+
+        // Enviar os dados via AJAX
         $.ajax({
             url: '../controllers/clienteController.php',
             method: 'POST',

@@ -6,6 +6,8 @@
     <title>Clientes - GastroNet</title>
     <link rel="stylesheet" href="CSS/CadastroCliente.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
     <script src="JS/cliente.js"></script>
 </head>
 <body>
@@ -30,14 +32,14 @@
                 <label for="nomeCliente">Nome:</label>
                 <input type="text" id="nomeCliente" name="nomeCliente" required>
 
-                <label for="Telefone">Telefone:</label>
-                <input type="text" id="Telefone" name="Telefone" required>
+                <label for="telefone">Telefone:</label>
+                <input type="text" id="telefone" name="Telefone" required>
 
-                <label for="Endereco">Endereço:</label>
-                <input type="text" id="Endereco" name="Endereco" required>
+                <label for="endereco">Endereço:</label>
+                <input type="text" id="endereco" name="Endereco" required>
 
-                <label for="Email">Email:</label>
-                <input type="text" id="Email" name="Email" required>
+                <label for="emailCliente">Email:</label>
+                <input type="email" id="emailCliente" name="Email" required>
 
                 <button type="submit">Cadastrar</button>
             </form>
@@ -53,13 +55,13 @@
         <div>
             <h2 onclick="$('#buscarClienteForm').toggle()">Buscar Cliente</h2>
             <form id="buscarClienteForm" style="display: none;">
-                <label for="ClienteId">ID:</label>
-                <input type="number" id="ClienteId" name="ClienteId" required>
+                <label for="clienteId">ID:</label>
+                <input type="number" id="clienteId" name="clienteId" required>
                 <button type="submit">Buscar</button>
             </form>
-
-            <div id="ClienteEncontrado"></div>
+            <div id="clienteEncontrado"></div>
         </div>
+        
 
         <div>
             <h2 onclick="$('#alterarClienteForm').toggle()">Alterar CLiente</h2>

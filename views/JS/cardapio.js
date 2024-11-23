@@ -5,6 +5,7 @@ $(document).ready(function() {
         var nome = $('#nomeItem').val();
         var descricao = $('#Descricao').val();
         var valor = $('#Valor').val();
+        var categoria = $('#Categoria').val();
 
         $.ajax({
             url: '../controllers/cardapioController.php',
@@ -13,7 +14,8 @@ $(document).ready(function() {
                 acao: 'salvar',
                 nome: nome,
                 descricao: descricao,
-                valor: valor
+                valor: valor,
+                categoria: categoria  
             },
             success: function(response) {
                 try {
@@ -30,7 +32,7 @@ $(document).ready(function() {
         });
     });
 
-    // Função para listar Cardapios
+    // Função para listar Cardapios em formato de tabela
     function carregarCardapios() {
         $.ajax({
             url: '../controllers/cardapioController.php',
@@ -39,12 +41,28 @@ $(document).ready(function() {
             success: function(response) {
                 try {
                     var cardapios = JSON.parse(response);
-                    $('#listaCardapios').html('');
+                    var tabelaBody = $('#listaCardapios tbody');
+                    tabelaBody.html(''); // Limpa a tabela antes de adicionar os itens
+
+                    // Adicionando os cardápios na tabela
                     cardapios.forEach(function(cardapio) {
-                        $('#listaCardapios').append('<li>' + cardapio.nome + ' - ' + cardapio.valor + '</li>');
+                        // Formata o valor para o formato de moeda
+                        var valorFormatado = parseFloat(cardapio.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+                        tabelaBody.append(`
+                            <tr>
+                                <td>${cardapio.id}</td>
+                                <td>${cardapio.categoria}</td>
+                                <td>${cardapio.nome}</td>
+                                <td>${cardapio.descricao}</td>
+                                <td>${valorFormatado}</td>
+                            </tr>
+                            <tr><td colspan="5"><hr></td></tr> 
+                        `);
                     });
+
                 } catch (e) {
-                    alert("Erro ao carregar cardapios.");
+                    alert("Erro ao carregar cardápios.");
                 }
             },
             error: function() {
@@ -53,71 +71,43 @@ $(document).ready(function() {
         });
     }
 
+    
+    // Função para alterar cardapio
+    $('#alterarCardapioForm').submit(function(event) {
+        event.preventDefault();
+        var id = $('#alterarId').val();
+        var nome = $('#alterarItem').val();
+        var descricao = $('#alterarDescricao').val();
+        var valor = $('#alteraValor').val();
+        var categoria = $('#alteraCategoria').val();
+    
+        $.ajax({
+            url: '../controllers/cardapioController.php',
+            method: 'POST',
+            data: {
+                acao: 'alterar',
+                id: id,
+                nome: nome,
+                descricao: descricao,
+                valor: valor,
+                categoria: categoria
+            },
+            success: function(response) {
+                try {
+                    var data = JSON.parse(response);
+                    alert(data.message);
+                    carregarCardapios(); 
+                } catch (e) {
+                    alert("Erro ao alterar cardápio.");
+                }
+            },
+            error: function() {
+                alert("Erro na comunicação com o servidor.");
+            }
+        });
+    });
+    
+
+    // Carregar os cardápios ao carregar a página
     carregarCardapios();
 });
-
-
-/*document.getElementById('cadastraCardapio').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    // Coleta os dados do formulário
-    const nome = document.getElementById('nome').value;
-    const descricao = document.getElementById('descricao').value;
-    const valor = document.getElementById('valor').value;
-
-    // Envia os dados para o backend via POST
-    fetch('../controllers/CardapioController.php', {
-        method: 'POST',
-        body: new URLSearchParams({
-            acao: 'salvar',
-            nome: nome,
-            descricao: descricao,
-            valor: valor
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message === "Cardápio cadastrado com sucesso!") {
-            // Exibe os cardápios atualizados
-            carregarCardapios();
-        } else {
-            alert(data.message);
-        }
-    })
-    .catch(error => console.error('Erro ao cadastrar cardápio:', error));
-});
-
-// Função para carregar todos os cardápios
-function carregarCardapios() {
-    fetch('../controllers/CardapioController.php', {
-        method: 'POST',
-        body: new URLSearchParams({
-            acao: 'listar'
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        const cardapiosList = document.getElementById('cardapiosList');
-        cardapiosList.innerHTML = '';  // Limpa a lista antes de recarregar
-
-        if (data.message) {
-            cardapiosList.innerHTML = `<p>${data.message}</p>`;
-        } else {
-            data.forEach(cardapio => {
-                const cardapioElement = document.createElement('div');
-                cardapioElement.classList.add('cardapio-item');
-                cardapioElement.innerHTML = `
-                    <h3>${cardapio.nome}</h3>
-                    <p class="descricao"><strong>Descrição:</strong> ${cardapio.descricao}</p>
-                    <p class="valor"><strong>Valor:</strong> R$ ${cardapio.valor}</p>
-                `;
-                cardapiosList.appendChild(cardapioElement);
-            });
-        }
-    })
-    .catch(error => console.error('Erro ao carregar cardápios:', error));
-}
-
-
-// Carregar os cardápios ao carregar a página
-window.onload = carregarCardapios;*/
