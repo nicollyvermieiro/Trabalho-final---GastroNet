@@ -77,7 +77,7 @@ button {
 /* efeito botao com o mouse */
 button:hover {
     background-color: #eba818;
-    box-shadow: 0 8px 12px rgba(255, 255, 255, 0.1); /* luz */
+    box-shadow: 0 8px 12px rgba(255, 255, 255, 0.3); /* luz */
 }
 
 section {
@@ -92,7 +92,7 @@ section h2 {
 }
 
 section h2:hover {
-    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1); /* luz */
+    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.3); /* luz */
     color: #eba818;
 }
 

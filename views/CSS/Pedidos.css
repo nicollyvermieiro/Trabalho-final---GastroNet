@@ -1,4 +1,4 @@
-/* Tela */
+/* tela */
 * {
     margin: 0;
     padding: 0;
@@ -8,7 +8,6 @@
 
 body {
     background-color: #5e0a0a;
-    padding-top: 80px; /* Para evitar que o conteúdo fique oculto atrás da barra de navegação */
 }
 
 /* Barra superior */
@@ -19,12 +18,12 @@ body {
     background-color: #ac7c16;
     padding: 15px 20px;
     color: #fff;
-    position: fixed;
+    position: fixed; /* sempre deixa a barra presente */
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* prioridade */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* sombra */
 }
 
 /* Título da tela */
@@ -52,99 +51,120 @@ body {
     justify-content: space-around;
     flex-wrap: wrap;
     margin-top: 80px;
-    padding: 10px 50px;
+    padding: 50px;
     gap: 15px;
-    background-color: #ac7c16; /* Fundo da barra */
 }
 
 /* Botões */
-.b a {
-    display: block;
+button {
+    width: 80px;
+    height: 40px;
+    font-size: 15px;
+    background-color: #ac7c16;
+    color: #f5f5f5;
+    border-radius: 8px; /* borda arredondada */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* sombra */
+    transition: transform 0.2s ease, background-color 0.3s ease; /* animação */
+    text-decoration: none;
+    border: none;
+}
+
+.b button {
     width: 180px;
     height: 70px;
-    font-size: 18px;
+    font-size: 20px;
+}
+
+
+/* Efeito hover para botões */
+button:hover {
     background-color: #eba818;
-    color: #f5f5f5;
-    border-radius: 8px;
-    text-align: center;
-    line-height: 70px;
-    text-decoration: none;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
+    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.3); /* luz */
 }
 
-/* Efeito de hover nos botões */
-.b a:hover {
-    background-color: #ac7c16;
-}
-
-/* Seção de formulário e pedidos */
+/* Seção */
 section {
     padding: 20px;
-    color: #f5f5f5;
+    color: #fff;
+    margin-top: 130px;
 }
 
-/* Formulário */
-form {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 30px;
+section h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* sombra */
+    transition: transform 0.2s ease, color 0.3s ease;
 }
 
-form label {
+section h2:hover {
+    color: #eba818;
+    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.3); /* luz */
+}
+
+section div {
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+/* Label */
+label {
     display: block;
-    margin: 8px 0;
-    font-size: 1em;
-    color: #333;
+    margin: 10px 0 5px;
+    color: #f5f5f5;
+    font-weight: bold;
 }
 
-form select,
-form input[type="checkbox"] {
+/* Inputs e selects */
+form select, form input[type="checkbox"], input {
     width: 100%;
     padding: 10px;
     margin-top: 5px;
     border: 1px solid #adadad;
     border-radius: 5px;
-}
-
-form button {
-    width: 100%;
-    padding: 10px;
-    background-color: #ac7c16;
-    color: #f5f5f5;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    border: none;
-    margin-top: 15px;
-    transition: background-color 0.3s ease;
-}
-
-/* Efeito de hover no botão de cadastro */
-form button:hover {
-    background-color: #eba818;
-}
-
-/* Lista de pedidos */
-ul#listaPedidos {
-    list-style: none;
-    padding: 0;
-}
-
-ul#listaPedidos li {
+    font-size: 1em;
     background-color: #fff;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-ul#listaPedidos li strong {
     color: #333;
 }
 
+
+/* Estilos para a lista de pedidos */
+#listaPedido {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.pedido-item {
+    background-color: #f0bf55;
+
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.pedido-item:hover {
+    background-color: #eba818;
+}
+
+.pedido-item strong {
+    color: #333;
+}
+
+
+.pedido-item .pedido-info {
+    margin-top: 10px;
+    color: #555;
+}
+
+.pedido-item .pedido-info span {
+    font-weight: bold;
+}
 /* Rodapé da tela */
 footer {
     background-color: #ac7c16;
@@ -155,5 +175,5 @@ footer {
     bottom: 0;
     left: 0;
     width: 100%;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* sombra */
 }

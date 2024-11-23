@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cardápio - GastroNet</title>
     <link rel="stylesheet" href="CSS/Cardapio.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="JS/cardapio.js"></script>
 </head>
 <body>
     <nav class="a">
@@ -15,101 +17,94 @@
     </nav>
 
     <nav class="b">
-        <a href="index.html">Voltar para a página principal</a>
-        <a href="funcionarios.html">Funcionários</a>
-        <a href="clientes.html">Clientes</a>
-        <a href="pedidos.html">Pedidos</a>
+        <button onclick="window.location.href='index.html'">Tela Principal</button>
+        <button onclick="window.location.href='funcionarios.html'">Funcionários</button>
+        <button onclick="window.location.href='clientes.html'">Clientes</button>
+        <button onclick="window.location.href='pedidos.html'">Pedidos</button>
     </nav>
 
     <section>
-        <h2>Adicionar Novo Cardápio</h2>
-        <form id="formCardapio">
-            <label for="nome">Nome do item:</label>
-            <input type="text" id="nome" name="nome" required>
+        <div>
+            <h2 onclick="$('#cadastroCardapio').toggle()">Adicionar Novo Cardápio</h2>
+            <form id="cadastroCardapio" style="display: none;">
+                <label for="nomeItem">Nome do item:</label>
+                <input type="text" id="nomeItem" name="nomeItem" required>
 
-            <label for="descricao">Descrição:</label>
-            <textarea id="descricao" name="descricao" rows="4" required></textarea>
+                <label for="Descricao">Descrição:</label>
+                <textarea id="Descricao" name="Descricao" rows="4" required></textarea>
 
-            <label for="valor">Valor:</label>
-            <div class="valor-container">
-                <span class="currency-symbol">R$</span>
-                <input type="number" id="valor" name="valor" step="0.01" required>
-            </div>
+                <label for="Valor">Valor:</label>
+                <div class="Valor-container">
+                    <span class="currency-symbol">R$</span>
+                    <input type="number" id="Valor" name="Valor" step="0.01" required>
+                </div>
 
-            <button type="submit">Adicionar Cardápio</button>
-        </form>
+                <label for="Categoria">Categoria:</label>
+                <select id="Categoria" name="Categoria" required>
+                    <option value="Lanches">Lanches</option>
+                    <option value="Porcao">Porções</option>
+                    <option value="Sobremesa">Sobremesa</option>
+                    <option value="Bebida">Bebida</option>
+                    <!-- Adicione outras categorias conforme necessário -->
+                </select>
 
-        <h2>Cardápios Cadastrados</h2>
-        <div id="cardapiosList">
-            <!-- Os cardápios cadastrados serão carregados aqui -->
+
+                <button type="submit">Adicionar Cardápio</button>
+            </form>
         </div>
+
+        <div>
+            <h2 onclick="$('#listaCardapios').toggle()">Cardápios Cadastrados</h2>
+            <table id="listaCardapios" style="display: none; width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Categoria</th>
+                        <th>Nome</th>
+                        <th>Descrição</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Itens de cardápio serão inseridos aqui via AJAX -->
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h2 onclick="$('#alterarCardapioForm').toggle()">Alterar Cardápio</h2>
+            <form id="alterarCardapioForm" style="display: none;">
+                <label for="alterarId">Id do item:</label>
+                <input type="text" id="alterarId" name="alterarId" required>
+
+                <label for="alterarItem">Nome do item:</label>
+                <input type="text" id="alterarItem" name="alterarItem" required>
+
+                <label for="alterarDescricao">Descrição:</label>
+                <textarea id="alterarDescricao" name="alterarDescricao" rows="4" required></textarea>
+
+                <label for="alteraValor">Valor:</label>
+                <div class="Valor-container">
+                    <span class="currency-symbol">R$</span>
+                    <input type="number" id="alteraValor" name="alteraValor" step="0.01" required>
+                </div>
+
+                <label for="alteraCategoria">Categoria:</label>
+                <select id="alteraCategoria" name="alteraCategoria" required>
+                    <option value="Lanches">Lanches</option>
+                    <option value="Porcao">Porções</option>
+                    <option value="Sobremesa">Sobremesa</option>
+                    <option value="Bebida">Bebida</option>
+                    <!-- Adicione outras categorias conforme necessário -->
+                </select>
+
+                <button type="submit">Alterar</button>
+            </form>
+        </div>
+        
     </section>
 
     <script>
-        document.getElementById('formCardapio').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            // Coleta os dados do formulário
-            const nome = document.getElementById('nome').value;
-            const descricao = document.getElementById('descricao').value;
-            const valor = document.getElementById('valor').value;
-
-            // Envia os dados para o backend via POST
-            fetch('../controllers/CardapioController.php', {
-                method: 'POST',
-                body: new URLSearchParams({
-                    acao: 'salvar',
-                    nome: nome,
-                    descricao: descricao,
-                    valor: valor
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message === "Cardápio cadastrado com sucesso!") {
-                    // Exibe os cardápios atualizados
-                    carregarCardapios();
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => console.error('Erro ao cadastrar cardápio:', error));
-        });
-
-        // Função para carregar todos os cardápios
-        function carregarCardapios() {
-            fetch('../controllers/CardapioController.php', {
-                method: 'POST',
-                body: new URLSearchParams({
-                    acao: 'listar'
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const cardapiosList = document.getElementById('cardapiosList');
-                cardapiosList.innerHTML = '';  // Limpa a lista antes de recarregar
-
-                if (data.message) {
-                    cardapiosList.innerHTML = `<p>${data.message}</p>`;
-                } else {
-                    data.forEach(cardapio => {
-                        const cardapioElement = document.createElement('div');
-                        cardapioElement.classList.add('cardapio-item');
-                        cardapioElement.innerHTML = `
-                            <h3>${cardapio.nome}</h3>
-                            <p class="descricao"><strong>Descrição:</strong> ${cardapio.descricao}</p>
-                            <p class="valor"><strong>Valor:</strong> R$ ${cardapio.valor}</p>
-                        `;
-                        cardapiosList.appendChild(cardapioElement);
-                    });
-                }
-            })
-            .catch(error => console.error('Erro ao carregar cardápios:', error));
-        }
-
-
-        // Carregar os cardápios ao carregar a página
-        window.onload = carregarCardapios;
     </script>
 </body>
 </html>

@@ -61,6 +61,7 @@ button {
 /* efeito botao com o mouse */
 button:hover {
     background-color: #eba818;
+    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.3); /* luz */
 }
 
 .b {

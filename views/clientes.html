@@ -6,6 +6,9 @@
     <title>Clientes - GastroNet</title>
     <link rel="stylesheet" href="CSS/CadastroCliente.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+    <script src="JS/cliente.js"></script>
 </head>
 <body>
     <nav class="a">
@@ -16,188 +19,74 @@
     </nav>
 
     <nav class="b">
-        <a href="index.html">Voltar para a página principal</a>
-        <a href="funcionarios.html">Funcionários</a>
-        <a href="cardapio.html">Cardápio</a>
-        <a href="pedidos.html">Pedidos</a>
+        <button onclick="window.location.href='index.html'">Tela Principal</button>
+        <button onclick="window.location.href='funcionarios.html'">Funcionários</button>
+        <button onclick="window.location.href='cardapio.html'">Cardápio</button>
+        <button onclick="window.location.href='pedidos.html'">Pedidos</button>
     </nav>
 
     <section>
-        <h2>Cadastrar Cliente</h2>
-        <form id="cadastroCliente">
-            <label for="nomeCliente">Nome:</label>
-            <input type="text" id="nomeCliente" name="nomeCliente" required>
+        <div>
+            <h2 onclick="$('#cadastroCliente').toggle()">Cadastrar Cliente</h2>
+            <form id="cadastroCliente" style="display: none;">
+                <label for="nomeCliente">Nome:</label>
+                <input type="text" id="nomeCliente" name="nomeCliente" required>
 
-            <label for="telefone">Telefone:</label>
-            <input type="text" id="telefone" name="telefone" required>
+                <label for="telefone">Telefone:</label>
+                <input type="text" id="telefone" name="Telefone" required>
 
-            <label for="endereco">Endereço:</label>
-            <input type="text" id="endereco" name="endereco" required>
+                <label for="endereco">Endereço:</label>
+                <input type="text" id="endereco" name="Endereco" required>
 
-            <label for="emailCliente">Email:</label>
-            <input type="email" id="emailCliente" name="emailCliente" required>
+                <label for="emailCliente">Email:</label>
+                <input type="email" id="emailCliente" name="Email" required>
 
-            <button type="submit">Cadastrar</button>
-        </form>
+                <button type="submit">Cadastrar</button>
+            </form>
+        </div>
 
-        <h2>Lista de Clientes</h2>
-        <ul id="listaClientes">
-            <!-- Lista de clientes será carregada aqui via AJAX -->
-        </ul>
+        <div>
+            <h2 onclick="$('#listaClientes').toggle()">Lista de Clientes</h2>
+            <ul id="listaClientes" style="display: none;">
+                <!-- Lista de CLientes será carregada aqui via AJAX -->
+            </ul>
+        </div>
 
-        <h2>Buscar Cliente</h2>
-        <form id="buscarClienteForm">
-            <label for="clienteId">ID:</label>
-            <input type="number" id="clienteId" name="clienteId" required>
-            <button type="submit">Buscar</button>
-        </form>
+        <div>
+            <h2 onclick="$('#buscarClienteForm').toggle()">Buscar Cliente</h2>
+            <form id="buscarClienteForm" style="display: none;">
+                <label for="clienteId">ID:</label>
+                <input type="number" id="clienteId" name="clienteId" required>
+                <button type="submit">Buscar</button>
+            </form>
+            <div id="clienteEncontrado"></div>
+        </div>
+        
 
-        <div id="clienteEncontrado"></div>
+        <div>
+            <h2 onclick="$('#alterarClienteForm').toggle()">Alterar CLiente</h2>
+            <form id="alterarClienteForm" style="display: none;">
+                <label for="alterarId">ID:</label>
+                <input type="number" id="alterarId" name="alterarId" required>
 
-        <h2>Alterar Cliente</h2>
-        <form id="alterarClienteForm">
-            <label for="alterarId">ID:</label>
-            <input type="number" id="alterarId" name="alterarId" required>
+                <label for="alterarNome">Nome:</label>
+                <input type="text" id="alterarNome" name="alterarNome" required>
 
-            <label for="alterarNome">Nome:</label>
-            <input type="text" id="alterarNome" name="alterarNome" required>
+                <label for="alterarTelefone">Telefone:</label>
+                <input type="text" id="alterarTelefone" name="alterarTelefone" required>
 
-            <label for="alterarTelefone">Telefone:</label>
-            <input type="text" id="alterarTelefone" name="alterarTelefone" required>
+                <label for="alterarEndereco">Endereço:</label>
+                <input type="text" id="alterarEndereco" name="alterarEndereco" required>
 
-            <label for="alterarEndereco">Endereço:</label>
-            <input type="text" id="alterarEndereco" name="alterarEndereco" required>
+                <label for="alterarEmail">Email:</label>
+                <input type="text" id="alterarEmail" name="alterarEmail" required>
 
-            <label for="alterarEmail">Email:</label>
-            <input type="email" id="alterarEmail" name="alterarEmail" required>
-
-            <button type="submit">Alterar</button>
-        </form>
+                <button type="submit">Alterar</button>
+            </form>
+        </div>
     </section>
 
     <script>
-            $(document).ready(function() {
-        // Função para cadastrar cliente
-        $('#cadastroCliente').submit(function(event) {
-            event.preventDefault();
-            var nome = $('#nomeCliente').val();
-            var telefone = $('#telefone').val();
-            var endereco = $('#endereco').val();
-            var email = $('#emailCliente').val();
-            
-            $.ajax({
-                url: '../controllers/clienteController.php',
-                method: 'POST',
-                data: {
-                    acao: 'salvar',
-                    nome: nome,
-                    telefone: telefone,
-                    endereco: endereco,
-                    email: email
-                },
-                success: function(response) {
-                    console.log(response);
-                    try {
-                        var data = JSON.parse(response);
-                        alert(data.message);
-                        carregarClientes(); // Recarrega a lista de clientes
-                    } catch (e) {
-                        alert("Erro na resposta do servidor.");
-                    }
-                },
-                error: function() {
-                    alert("Erro na comunicação com o servidor.");
-                }
-            });
-        });
-
-        // Função para listar clientes
-        function carregarClientes() {
-            $.ajax({
-                url: '../controllers/clienteController.php',
-                method: 'POST',
-                data: { acao: 'listar' },
-                success: function(response) {
-                    try {
-                        var clientes = JSON.parse(response);
-                        $('#listaClientes').html('');
-                        clientes.forEach(function(cliente) {
-                            $('#listaClientes').append('<li>' + cliente.nome + ' - ' + cliente.telefone + '</li>');
-                        });
-                    } catch (e) {
-                        alert("Erro ao carregar clientes.");
-                    }
-                },
-                error: function() {
-                    alert("Erro na comunicação com o servidor.");
-                }
-            });
-        }
-
-        // Função para buscar cliente
-        $('#buscarClienteForm').submit(function(event) {
-            event.preventDefault();
-            var id = $('#clienteId').val();
-            $.ajax({
-                url: '../controllers/clienteController.php',
-                method: 'POST',
-                data: { acao: 'buscar', id: id },
-                success: function(response) {
-                    try {
-                        var cliente = JSON.parse(response);
-                        if (cliente.message) {
-                            $('#clienteEncontrado').html(cliente.message);
-                        } else {
-                            $('#clienteEncontrado').html('Nome: ' + cliente.nome + '<br>Telefone: ' + cliente.telefone);
-                        }
-                    } catch (e) {
-                        alert("Erro ao buscar cliente.");
-                    }
-                },
-                error: function() {
-                    alert("Erro na comunicação com o servidor.");
-                }
-            });
-        });
-
-        // Função para alterar cliente
-        $('#alterarClienteForm').submit(function(event) {
-            event.preventDefault();
-            var id = $('#alterarId').val();
-            var nome = $('#alterarNome').val();
-            var telefone = $('#alterarTelefone').val();
-            var endereco = $('#alterarEndereco').val();
-            var email = $('#alterarEmail').val();
-            $.ajax({
-                url: '../controllers/clienteController.php',
-                method: 'POST',
-                data: {
-                    acao: 'alterar',
-                    id: id,
-                    nome: nome,
-                    telefone: telefone,
-                    endereco: endereco,
-                    email: email
-                },
-                success: function(response) {
-                    try {
-                        var data = JSON.parse(response);
-                        alert(data.message);
-                        carregarClientes(); // Recarrega a lista de clientes
-                    } catch (e) {
-                        alert("Erro ao alterar cliente.");
-                    }
-                },
-                error: function() {
-                    alert("Erro na comunicação com o servidor.");
-                }
-            });
-        });
-
-        // Carregar a lista de clientes inicialmente
-        carregarClientes();
-    });
-
     </script>
 </body>
 </html>
