@@ -5,8 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Funcionários - GastroNet</title>
     <link rel="stylesheet" href="CSS/CadastroFunc.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="JS/funcionarios.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <nav class="a">
@@ -15,12 +18,20 @@
         </div>
         <h2>Cadastro e Gerenciamento de Funcionários</h2>
     </nav>
-    
+
     <nav class="b">
-        <button onclick="window.location.href='index.html'">Tela Principal</button>
-        <button onclick="window.location.href='clientes.html'">Clientes</button>
-        <button onclick="window.location.href='cardapio.html'">Cardápio</button>
-        <button onclick="window.location.href='pedidos.html'">Pedidos</button>
+        <button onclick="window.location.href='index.html'">
+            Tela Principal
+        </button>
+        <button onclick="window.location.href='clientes.html'">
+            👥 Clientes
+        </button>
+        <button onclick="window.location.href='cardapio.html'">
+            🍽️ Cardápio
+        </button>
+        <button onclick="window.location.href='pedidos.html'">
+            📋 Pedidos
+        </button>
     </nav>
 
     <section>
@@ -64,7 +75,7 @@
             <div id="funcionarioEncontrado"></div>
         </div>
 
-        <div>
+        <div id="alt">
             <h2 onclick="$('#alterarFuncionarioForm').toggle()">Alterar Funcionário</h2>
             <form id="alterarFuncionarioForm" style="display: none;">
                 <label for="alterarId">ID:</label>
@@ -90,7 +101,8 @@
         </div>
     </section>
 
-    <script>
-    </script>
+    <footer>
+        <p>&copy; 2024 GastroNet</p>
+    </footer>
 </body>
 </html>

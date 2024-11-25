@@ -21,7 +21,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             }
         })
-        .catch(error => console.error('Erro ao carregar clientes:', error));
+        .catch(error => {
+            console.error('Erro ao carregar clientes:', error);
+            Swal.fire({
+                title: "ERRO",
+                text: "Erro ao carregar clientes.",
+                icon: "error",
+                confirmButtonColor: '#5e0a0a'
+            });
+        });
     }
 
     // Função para carregar os itens do cardápio
@@ -33,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
             const itensSelect = document.getElementById('listaItens');
-            itensSelect.innerHTML = '<option value="" disabled selected>Selecione um item</option>'; // Limpa a lista
+            itensSelect.innerHTML = ''; // Limpa a lista
 
             if (data.message) {
                 alert(data.message);
@@ -50,18 +58,38 @@ document.addEventListener('DOMContentLoaded', function () {
                 itensSelect.addEventListener('change', atualizarValorTotal);
             }
         })
-        .catch(error => console.error('Erro ao carregar itens do cardápio:', error));
+        .catch(error => {
+            console.error('Erro ao carregar itens do cardápio:', error);
+            Swal.fire({
+                title: "ERRO",
+                text: "Erro ao carregar itens do cardápio.",
+                icon: "error",
+                confirmButtonColor: '#5e0a0a'
+            });
+        });
     }
 
     // Função para calcular e atualizar o valor total
     function atualizarValorTotal() {
         const itensSelect = document.getElementById('listaItens');
-        const selectedOption = itensSelect.options[itensSelect.selectedIndex];
-        const preco = parseFloat(selectedOption.getAttribute('data-preco')) || 0;
+        const itensSelecionados = Array.from(itensSelect.selectedOptions);
+        let valorTotal = 0;
 
+        // Limpa a lista de itens selecionados
+        const listaItensSelecionados = document.getElementById('itensSelecionados');
+        listaItensSelecionados.innerHTML = '';
+
+        itensSelecionados.forEach(option => {
+            const preco = parseFloat(option.getAttribute('data-preco')) || 0;
+            const li = document.createElement('li');
+            li.textContent = `${option.textContent} - R$ ${preco.toFixed(2)}`;
+            listaItensSelecionados.appendChild(li);
+            valorTotal += preco;
+        });
+
+        // Atualiza o valor total na interface
         const valorTotalElement = document.getElementById('valorTotal');
-        const valorAtual = parseFloat(valorTotalElement.textContent);
-        valorTotalElement.textContent = (valorAtual + preco).toFixed(2);
+        valorTotalElement.textContent = valorTotal.toFixed(2);
     }
 
     // Função para cadastrar um novo pedido
@@ -70,19 +98,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const clienteId = document.getElementById('listaCliente').value;
         const itensSelect = document.getElementById('listaItens');
-        const itemSelecionado = itensSelect.options[itensSelect.selectedIndex];
+        const itensSelecionados = Array.from(itensSelect.selectedOptions);
         const formaPag = document.getElementById('formaPag').value;
 
-        if (!clienteId || !itemSelecionado) {
-            alert('Por favor, selecione um cliente e pelo menos um item.');
+        if (!clienteId || itensSelecionados.length === 0) {
+            Swal.fire({
+                title: "ERRO",
+                text: "Por favor, selecione um cliente e pelo menos um item.",
+                icon: "error",
+                confirmButtonColor: '#5e0a0a'
+            });
             return;
         }
 
-        const itens = [{
-            id: itemSelecionado.value,
-            nome: itemSelecionado.textContent,
-            preco: itemSelecionado.getAttribute('data-preco')
-        }];
+        const itens = itensSelecionados.map(option => ({
+            id: option.value,
+            nome: option.textContent,
+            preco: option.getAttribute('data-preco')
+        }));
 
         const valorTotal = parseFloat(document.getElementById('valorTotal').textContent);
 
@@ -96,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 forma_pag: formaPag
             })
         })
-        .then(response => response.text())  // Altere para .text()
+        .then(response => response.text())  // Alterado para .text()
         .then(data => {
             console.log(data);  // Imprime o retorno do servidor para verificar a resposta
             try {
@@ -107,14 +140,25 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             } catch (e) {
                 console.error('Erro ao parsear JSON:', e);
-                alert('Erro ao cadastrar pedido. Verifique o console para mais detalhes.');
+                Swal.fire({
+                    title: "ERRO",
+                    text: "Erro ao cadastrar pedido. Verifique o console para mais detalhes.",
+                    icon: "error",
+                    confirmButtonColor: '#5e0a0a'
+                });
             }
         })
-        .catch(error => console.error('Erro ao cadastrar pedido:', error));
-        
+        .catch(error => {
+            console.error('Erro ao cadastrar pedido:', error);
+            Swal.fire({
+                title: "ERRO",
+                text: "Erro ao cadastrar pedido.",
+                icon: "error",
+                confirmButtonColor: '#5e0a0a'
+            });
+        });
     });
 
-    
     // Função para carregar todos os pedidos
     function carregarPedidos() {
         fetch('../controllers/pedidoController.php', {
@@ -142,7 +186,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             }
         })
-        .catch(error => console.error('Erro ao carregar pedidos:', error));
+        .catch(error => {
+            console.error('Erro ao carregar pedidos:', error);
+            Swal.fire({
+                title: "ERRO",
+                text: "Erro ao carregar pedidos.",
+                icon: "error",
+                confirmButtonColor: '#5e0a0a'
+            });
+        });
     }
 
     // Carregar os dados ao carregar a página
