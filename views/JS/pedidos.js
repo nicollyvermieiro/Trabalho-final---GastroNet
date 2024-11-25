@@ -115,7 +115,7 @@ function finalizarPedido(numPedido, button) {
             // Atualiza a cor do botão para verde e o desabilita
             button.style.backgroundColor = '#28a745';
             button.style.color = '#fff';
-            button.textContent = 'Finalizado';
+            button.innerHTML = '<strong>Finalizado</strong>';
             button.disabled = true;
         }
     })
