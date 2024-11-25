@@ -25,11 +25,21 @@ $(document).ready(function() {
                         alert(data.message);
                     }
                 } catch (e) {
-                    alert("Erro na resposta do servidor.");
+                    Swal.fire({
+                        title: "ERRO",
+                        text: "Erro na resposta com o servidor.",
+                        icon: "error",
+                        confirmButtonColor: '#5e0a0a'
+                    });
                 }
             },
             error: function() {
-                alert("Erro na comunicação com o servidor.");
+                Swal.fire({
+                    title: "ERRO",
+                    text: "Erro na comunicação com o servidor.",
+                    icon: "error",
+                    confirmButtonColor: '#5e0a0a'
+                });
             }
         });
 

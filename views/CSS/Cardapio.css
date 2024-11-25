@@ -3,7 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: Verdana;
 }
 
 body {
@@ -60,21 +60,32 @@ form {
     margin-top: 20px; /* Ajuste a margem para que o formulário tenha espaçamento adequado */
 }
 
+/* Botoes */
 button {
-    width: 80px; /* Faz o botão ocupar toda a largura disponível */
-    height: 40px;
+    width: 130px;
+    height: 55px;
     font-size: 15px;
     background-color: #ac7c16;
     color: #f5f5f5;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* sombra */
     transition: transform 0.2s ease, background-color 0.3s ease;
-    cursor: pointer; /* Adiciona o ponteiro de clique */
-    margin-top: 20px; /* Espaço acima do botão */
+    text-decoration: none;
+    display: flex;
+    align-items: center; /* Alinha emoji e texto verticalmente */
+    justify-content: center; /* Alinha emoji e texto horizontalmente */
+    padding: 0 15px; /* Espaçamento interno */
+    margin-top: 5px;
+}
+
+/* Adiciona um espaço entre o emoji e o texto */
+button span {
+    margin-left: 10px;
 }
 
 .b button {
-    width: 180px;
+    width: auto; 
+    min-width: 195px;
     height: 70px;
     font-size: 20px;
 }
@@ -90,6 +101,7 @@ section {
     flex-wrap: wrap;
     padding: 20px;
     color: #fff;
+    margin-bottom: 60px; 
 }
 
 section h2 {

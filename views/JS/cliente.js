@@ -7,14 +7,19 @@ $(document).ready(function() {
         event.preventDefault();
 
         var nome = $('#nomeCliente').val().trim();
-        var telefone = $('#telefone').cleanVal(); // Remove a máscara
+        var telefone = $('#telefone').cleanVal(); 
         var endereco = $('#endereco').val().trim();
         var email = $('#emailCliente').val().trim();
 
         // Verificar se todos os campos estão preenchidos
         if (!nome || !telefone || !endereco || !email) {
-            alert("Todos os campos são obrigatórios!");
-            return; // Interrompe o envio
+            Swal.fire({
+                title: "ERRO",
+                text: "Todos os campos são obrigatórios!",
+                icon: "error",
+                confirmButtonColor: '#5e0a0a'
+            });
+            return;
         }
 
         // Se todos os campos estiverem preenchidos, faz o envio
@@ -24,7 +29,7 @@ $(document).ready(function() {
             data: {
                 acao: 'salvar',
                 nome: nome,
-                telefone: telefone, // Telefone sem máscara
+                telefone: telefone,
                 endereco: endereco,
                 email: email
             },
@@ -35,11 +40,21 @@ $(document).ready(function() {
                     alert(data.message);
                     carregarClientes(); // Recarrega a lista de clientes
                 } catch (e) {
-                    alert("Erro na resposta do servidor.");
+                    Swal.fire({
+                        title: "ERRO",
+                        text: "Erro na resposta do servidor.",
+                        icon: "error",
+                        confirmButtonColor: '#5e0a0a'
+                    });
                 }
             },
             error: function() {
-                alert("Erro na comunicação com o servidor.");
+                Swal.fire({
+                    title: "ERRO",
+                    text: "Erro na comunicação com o servidor.",
+                    icon: "error",
+                    confirmButtonColor: '#5e0a0a'
+                });
             }
         });
     });
@@ -88,15 +103,24 @@ $(document).ready(function() {
                     // Insere a tabela no elemento com ID 'listaClientes'
                     $('#listaClientes').html(tabela);
                 } catch (e) {
-                    alert("Erro ao carregar clientes.");
+                    Swal.fire({
+                        title: "ERRO",
+                        text: "Erro ao carregar clientes.",
+                        icon: "error",
+                        confirmButtonColor: '#5e0a0a'
+                    });
                 }
             },
             error: function() {
-                alert("Erro na comunicação com o servidor.");
+                Swal.fire({
+                    title: "ERRO",
+                    text: "Erro na comunicação com o servidor.",
+                    icon: "error",
+                    confirmButtonColor: '#5e0a0a'
+                });
             }
         });
     }
-    
 
     // Função para buscar cliente
     $('#buscarClienteForm').submit(function(event) {
@@ -115,11 +139,21 @@ $(document).ready(function() {
                         $('#clienteEncontrado').html('Nome: ' + cliente.nome + '<br>Telefone: ' + cliente.telefone + '<br>Endereço: ' + cliente.endereco);
                     }
                 } catch (e) {
-                    alert("Erro ao buscar cliente.");
+                    Swal.fire({
+                        title: "ERRO",
+                        text: "Erro ao buscar cliente.",
+                        icon: "error",
+                        confirmButtonColor: '#5e0a0a'
+                    });
                 }
             },
             error: function() {
-                alert("Erro na comunicação com o servidor.");
+                Swal.fire({
+                    title: "ERRO",
+                    text: "Erro na comunicação com o servidor.",
+                    icon: "error",
+                    confirmButtonColor: '#5e0a0a'
+                });
             }
         });
     });
@@ -127,17 +161,22 @@ $(document).ready(function() {
     // Função para alterar cliente
     $('#alterarClienteForm').submit(function(event) {
         event.preventDefault();
-        
+
         var id = $('#alterarId').val();
         var nome = $('#alterarNome').val().trim();
-        var telefone = $('#alterarTelefone').cleanVal(); // Remove a máscara
+        var telefone = $('#alterarTelefone').cleanVal();
         var endereco = $('#alterarEndereco').val().trim();
         var email = $('#alterarEmail').val().trim();
 
         // Verificar se todos os campos estão preenchidos
         if (!id || !nome || !telefone || !endereco || !email) {
-            alert("Todos os campos são obrigatórios!");
-            return; // Interrompe o envio
+            Swal.fire({
+                title: "ERRO",
+                text: "Todos os campos são obrigatórios!",
+                icon: "error",
+                confirmButtonColor: '#5e0a0a'
+            });
+            return;
         }
 
         // Enviar os dados via AJAX
@@ -155,14 +194,24 @@ $(document).ready(function() {
             success: function(response) {
                 try {
                     var data = JSON.parse(response);
-                    alert(data.message);
-                    carregarClientes(); // Recarrega a lista de clientes
+                    alert(data.message); 
+                    carregarClientes(); 
                 } catch (e) {
-                    alert("Erro ao alterar cliente.");
+                    Swal.fire({
+                        title: "ERRO",
+                        text: "Erro ao alterar cliente.",
+                        icon: "error",
+                        confirmButtonColor: '#5e0a0a'
+                    });
                 }
             },
             error: function() {
-                alert("Erro na comunicação com o servidor.");
+                Swal.fire({
+                    title: "ERRO",
+                    text: "Erro na comunicação com o servidor.",
+                    icon: "error",
+                    confirmButtonColor: '#5e0a0a'
+                });
             }
         });
     });

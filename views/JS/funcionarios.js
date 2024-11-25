@@ -23,64 +23,85 @@ $(document).ready(function() {
                 try {
                     var data = JSON.parse(response);
                     alert(data.message);
-                    carregarFuncionarios(); // Recarrega a lista de funcionários
+                    carregarFuncionarios(); 
                 } catch (e) {
-                    alert("Erro na resposta do servidor.");
+                    Swal.fire({
+                        title: "ERRO",
+                        text: "Erro na resposta do servidor.",
+                        icon: "error",
+                        confirmButtonColor: '#5e0a0a'
+                    });
                 }
             },
             error: function() {
-                alert("Erro na comunicação com o servidor.");
+                Swal.fire({
+                    title: "ERRO",
+                    text: "Erro na comunicação com o servidor.",
+                    icon: "error",
+                    confirmButtonColor: '#5e0a0a'
+                });
             }
         });
     });
 
-   // Função para listar funcionários
-function carregarFuncionarios() {
-    $.ajax({
-        url: '../controllers/funcionarioController.php',
-        method: 'POST',
-        data: { acao: 'listar' },
-        success: function(response) {
-            try {
-                var funcionarios = JSON.parse(response);
-                // Define a estrutura inicial da tabela com cabeçalhos
-                var tabela = `
-                    <table border="1" style="width: 100%; border-collapse: collapse;">
-                        <thead>
+    // Função para listar funcionários
+    function carregarFuncionarios() {
+        $.ajax({
+            url: '../controllers/funcionarioController.php',
+            method: 'POST',
+            data: { acao: 'listar' },
+            success: function(response) {
+                try {
+                    var funcionarios = JSON.parse(response);
+
+                    // Define a estrutura inicial da tabela com cabeçalhos
+                    var tabela = `
+                        <table border="1" style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Cargo</th>
+                                    <th>Setor</th>
+                                </tr>
+                            </thead>
+                            <tbody id="corpoTabelaFuncionarios"></tbody>
+                        </table>
+                    `;
+
+                    // Adiciona a tabela ao elemento de lista
+                    $('#listaFuncionarios').html(tabela);
+
+                    // Preenche as linhas da tabela
+                    funcionarios.forEach(function(funcionario) {
+                        $('#corpoTabelaFuncionarios').append(`
                             <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>Cargo</th>
-                                <th>Setor</th>
+                                <td>${funcionario.id}</td>
+                                <td>${funcionario.nome}</td>
+                                <td>${funcionario.cargo}</td>
+                                <td>${funcionario.setor}</td>
                             </tr>
-                        </thead>
-                        <tbody id="corpoTabelaFuncionarios"></tbody>
-                    </table>
-                `;
-
-                // Adiciona a tabela ao elemento de lista
-                $('#listaFuncionarios').html(tabela);
-
-                // Preenche as linhas da tabela
-                funcionarios.forEach(function(funcionario) {
-                    $('#corpoTabelaFuncionarios').append(`
-                        <tr>
-                            <td>${funcionario.id}</td>
-                            <td>${funcionario.nome}</td>
-                            <td>${funcionario.cargo}</td>
-                            <td>${funcionario.setor}</td>
-                        </tr>
-                    `);
+                        `);
+                    });
+                } catch (e) {
+                    Swal.fire({
+                        title: "ERRO",
+                        text: "Erro ao carregar funcionários.",
+                        icon: "error",
+                        confirmButtonColor: '#5e0a0a'
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    title: "ERRO",
+                    text: "Erro na comunicação com o servidor.",
+                    icon: "error",
+                    confirmButtonColor: '#5e0a0a'
                 });
-            } catch (e) {
-                alert("Erro ao carregar funcionários.");
             }
-        },
-        error: function() {
-            alert("Erro na comunicação com o servidor.");
-        }
-    });
-}
+        });
+    }
 
     // Função para buscar funcionário
     $('#buscarFuncionarioForm').submit(function(event) {
@@ -99,11 +120,21 @@ function carregarFuncionarios() {
                         $('#funcionarioEncontrado').html('Nome: ' + funcionario.nome + '<br>Cargo: ' + funcionario.cargo + '<br>Setor: ' + funcionario.setor);
                     }
                 } catch (e) {
-                    alert("Erro ao buscar funcionário.");
+                    Swal.fire({
+                        title: "ERRO",
+                        text: "Erro ao buscar funcionário.",
+                        icon: "error",
+                        confirmButtonColor: '#5e0a0a'
+                    });
                 }
             },
             error: function() {
-                alert("Erro na comunicação com o servidor.");
+                Swal.fire({
+                    title: "ERRO",
+                    text: "Erro na comunicação com o servidor.",
+                    icon: "error",
+                    confirmButtonColor: '#5e0a0a'
+                });
             }
         });
     });
@@ -133,14 +164,24 @@ function carregarFuncionarios() {
             success: function(response) {
                 try {
                     var data = JSON.parse(response);
-                    alert(data.message);
-                    carregarFuncionarios(); // Recarrega a lista de funcionários
+                    alert(data.message); 
+                    carregarFuncionarios();
                 } catch (e) {
-                    alert("Erro ao alterar funcionário.");
+                    Swal.fire({
+                        title: "ERRO",
+                        text: "Erro ao alterar funcionário.",
+                        icon: "error",
+                        confirmButtonColor: '#5e0a0a'
+                    });
                 }
             },
             error: function() {
-                alert("Erro na comunicação com o servidor.");
+                Swal.fire({
+                    title: "ERRO",
+                    text: "Erro na comunicação com o servidor.",
+                    icon: "error",
+                    confirmButtonColor: '#5e0a0a'
+                });
             }
         });
     });

@@ -3,7 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: Verdana;
 }
 
 body {
@@ -57,20 +57,30 @@ body {
 
 /* Botões */
 button {
-    width: 80px;
-    height: 40px;
+    width: 130px;
+    height: 55px;
     font-size: 15px;
     background-color: #ac7c16;
     color: #f5f5f5;
-    border-radius: 8px; /* borda arredondada */
+    border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* sombra */
-    transition: transform 0.2s ease, background-color 0.3s ease; /* animação */
+    transition: transform 0.2s ease, background-color 0.3s ease;
     text-decoration: none;
-    border: none;
+    display: flex;
+    align-items: center; /* Alinha emoji e texto verticalmente */
+    justify-content: center; /* Alinha emoji e texto horizontalmente */
+    padding: 0 15px; /* Espaçamento interno */
+    margin-top: 5px;
+}
+
+/* Adiciona um espaço entre o emoji e o texto */
+button span {
+    margin-left: 10px;
 }
 
 .b button {
-    width: 180px;
+    width: auto; 
+    min-width: 195px;
     height: 70px;
     font-size: 20px;
 }
@@ -84,9 +94,10 @@ button:hover {
 
 /* Seção */
 section {
+    flex-wrap: wrap;
     padding: 20px;
     color: #fff;
-    margin-top: 130px;
+    margin-bottom: 60px; 
 }
 
 section h2 {
@@ -126,6 +137,14 @@ form select, form input[type="checkbox"], input {
     font-size: 1em;
     background-color: #fff;
     color: #333;
+}
+
+#listaItens {
+    height: 40px;
+}
+
+#listaItens option {
+    line-height: 40px;
 }
 
 

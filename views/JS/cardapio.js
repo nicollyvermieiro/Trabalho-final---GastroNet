@@ -23,11 +23,21 @@ $(document).ready(function() {
                     alert(data.message);
                     carregarCardapios(); // Recarrega a lista de Cardapios
                 } catch (e) {
-                    alert("Erro na resposta do servidor.");
+                    Swal.fire({
+                        title: "ERRO",
+                        text: "Erro na resposta do servidor.",
+                        icon: "error",
+                        confirmButtonColor: '#5e0a0a'
+                      });
                 }
             },
             error: function() {
-                alert("Erro na comunicação com o servidor.");
+                Swal.fire({
+                    title: "ERRO",
+                    text: "Erro na comunicação com o servidor.",
+                    icon: "error",
+                    confirmButtonColor: '#5e0a0a'
+                  });
             }
         });
     });
@@ -62,11 +72,21 @@ $(document).ready(function() {
                     });
 
                 } catch (e) {
-                    alert("Erro ao carregar cardápios.");
+                    Swal.fire({
+                        title: "ERRO",
+                        text: "Erro ao carregar cardápios.",
+                        icon: "error",
+                        confirmButtonColor: '#5e0a0a'
+                      });
                 }
             },
             error: function() {
-                alert("Erro na comunicação com o servidor.");
+                Swal.fire({
+                    title: "ERRO",
+                    text: "Erro na comunicação com o servidor.",
+                    icon: "error",
+                    confirmButtonColor: '#5e0a0a'
+                  });
             }
         });
     }
@@ -98,11 +118,21 @@ $(document).ready(function() {
                     alert(data.message);
                     carregarCardapios(); 
                 } catch (e) {
-                    alert("Erro ao alterar cardápio.");
+                    Swal.fire({
+                        title: "ERRO",
+                        text: "Erro ao alterar cardápio.",
+                        icon: "error",
+                        confirmButtonColor: '#5e0a0a'
+                      });
                 }
             },
             error: function() {
-                alert("Erro na comunicação com o servidor.");
+                Swal.fire({
+                    title: "ERRO",
+                    text: "Erro na comunicação com o servidor.",
+                    icon: "error",
+                    confirmButtonColor: '#5e0a0a'
+                  });
             }
         });
     });
