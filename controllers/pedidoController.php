@@ -12,12 +12,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     switch ($acao) {
         case 'salvar':
             // Cadastrar pedido
-            $num_pedido = $_POST["num_pedido"];
+            $num_pedido = "PED-" . rand(1000, 9999); // Gerando um número único aleatório
             $cliente_id = $_POST["cliente_id"];
             $itens = json_decode($_POST["itens"], true); // Decodifica os itens JSON
             $valor_total = $_POST["valor_total"];
             $forma_pag = $_POST["forma_pag"];
+
+            // Agora, cria o objeto Pedido
             $pedido = new Pedido($num_pedido, $cliente_id, $itens, $valor_total, $forma_pag);
+
+            // Tenta cadastrar o pedido
             if ($pedido->cadastrar()) {
                 echo json_encode(["message" => "Pedido cadastrado com sucesso!"]);
             } else {

@@ -86,34 +86,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const valorTotal = parseFloat(document.getElementById('valorTotal').textContent);
 
-       fetch('../controllers/pedidoController.php', {
-    method: 'POST',
-    body: new URLSearchParams({
-        acao: 'salvar',
-        cliente_id: clienteId,
-        itens: JSON.stringify(itens),
-        valor_total: valorTotal.toFixed(2),
-        forma_pag: formaPag
-    })
-})
-.then(response => response.text())  // Altere para .text()
-.then(data => {
-    console.log(data);  // Imprime o retorno do servidor para verificar a resposta
-    try {
-        const jsonData = JSON.parse(data);  // Tenta converter para JSON
-        alert(jsonData.message);
-        if (jsonData.message === 'Pedido cadastrado com sucesso!') {
-            carregarPedidos();
-        }
-    } catch (e) {
-        console.error('Erro ao parsear JSON:', e);
-        alert('Erro ao cadastrar pedido. Verifique o console para mais detalhes.');
-    }
-})
-.catch(error => console.error('Erro ao cadastrar pedido:', error));
-
+        fetch('../controllers/pedidoController.php', {
+            method: 'POST',
+            body: new URLSearchParams({
+                acao: 'salvar',
+                cliente_id: clienteId,
+                itens: JSON.stringify(itens),
+                valor_total: valorTotal.toFixed(2),
+                forma_pag: formaPag
+            })
+        })
+        .then(response => response.text())  // Altere para .text()
+        .then(data => {
+            console.log(data);  // Imprime o retorno do servidor para verificar a resposta
+            try {
+                const jsonData = JSON.parse(data);  // Tenta converter para JSON
+                alert(jsonData.message);
+                if (jsonData.message === 'Pedido cadastrado com sucesso!') {
+                    carregarPedidos();
+                }
+            } catch (e) {
+                console.error('Erro ao parsear JSON:', e);
+                alert('Erro ao cadastrar pedido. Verifique o console para mais detalhes.');
+            }
+        })
+        .catch(error => console.error('Erro ao cadastrar pedido:', error));
+        
     });
 
+    
     // Função para carregar todos os pedidos
     function carregarPedidos() {
         fetch('../controllers/pedidoController.php', {
@@ -123,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => response.json())
         .then(data => {
             const listaPedidos = document.getElementById('listaPedido');
-            listaPedidos.innerHTML = ''; // Limpa a lista antes de recarregar
+            listaPedidos.innerHTML = '';
 
             if (data.message) {
                 listaPedidos.innerHTML = `<p>${data.message}</p>`;

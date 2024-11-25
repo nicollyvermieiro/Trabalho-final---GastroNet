@@ -30,10 +30,8 @@ class Pedido {
         $sql = "INSERT INTO pedido (num_pedido, cliente_id, valor_total, forma_pag) 
             VALUES (?, ?, ?, ?)";
         
-        // Prepara a consulta
         $stmt = $conn->prepare($sql);
     
-        // Verifica se a consulta foi preparada corretamente
         if ($stmt === false) {
             die('Erro na preparação da consulta: ' . $conn->error);
         }
@@ -41,29 +39,28 @@ class Pedido {
         // Vincula os parâmetros: num_pedido (string), cliente_id (int), valor_total (decimal), forma_pag (string)
         $stmt->bind_param("siss", $this->num_pedido, $this->cliente, $this->valor_total, $this->forma_pag);
     
-        // Executa a consulta
         if ($stmt->execute()) {
             // Pega o ID do pedido inserido
             $pedido_id = $stmt->insert_id;
     
             // Agora, insere os itens do pedido na tabela itens_pedido
             foreach ($this->itens as $item) {
+                // Inserir dados dos itens no pedido
                 $sql_item = "INSERT INTO itens_pedido (pedido_id, cardapio_id, item_nome, item_descricao, quantidade) 
                              VALUES (?, ?, ?, ?, ?)";
                 $stmt_item = $conn->prepare($sql_item);
+                // Certifique-se de passar os dados corretamente
                 $stmt_item->bind_param("isssi", $pedido_id, $item['cardapio_id'], $item['nome'], $item['descricao'], $item['quantidade']);
                 $stmt_item->execute();
             }
+    
             return true;
         }
     
         return false;
-    }
+    } 
     
     
-    
-    
-
     public function alterar() {
         global $conn;
         $sql = "UPDATE pedido SET num_pedido = ?, cliente_id = ?, valor_total = ?, forma_pag = ? WHERE id = ?";
