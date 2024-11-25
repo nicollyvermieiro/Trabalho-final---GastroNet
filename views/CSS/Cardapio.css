@@ -65,7 +65,7 @@ button {
     width: 130px;
     height: 55px;
     font-size: 15px;
-    background-color: #ac7c16;
+    background-color: #4dac16;
     color: #f5f5f5;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* sombra */
@@ -95,6 +95,38 @@ button:hover {
     background-color: #eba818;
     box-shadow: 0 4px 6px rgba(255, 255, 255, 0.3); /* luz */
 }
+
+/* Estilo para o botão de finalizar pedido */
+#finalizarPedidoBtn {
+    width: 160px;
+    height: 55px;
+    font-size: 18px;
+    background-color: #d9534f; /* Cor vermelha para destacar */
+    color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* sombra suave */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+    border: none; /* Remove a borda padrão */
+}
+
+/* Efeito ao passar o mouse sobre o botão de finalizar pedido */
+#finalizarPedidoBtn:hover {
+    background-color: #c9302c; /* Cor de fundo mais escura ao passar o mouse */
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.3); /* Sombra mais forte */
+    transform: scale(1.05); /* Leve aumento de tamanho */
+}
+
+/* Efeito quando o botão é pressionado */
+#finalizarPedidoBtn:active {
+    transform: scale(0.98); /* Reduz levemente o botão */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Sombra mais suave ao pressionar */
+}
+
 
 
 section {

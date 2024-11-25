@@ -45,12 +45,12 @@ class Pedido {
     
             // Agora, insere os itens do pedido na tabela itens_pedido
             foreach ($this->itens as $item) {
-                // Inserir dados dos itens no pedido
-                $sql_item = "INSERT INTO itens_pedido (pedido_id, cardapio_id, item_nome, item_descricao, quantidade) 
+                $sql_item = "INSERT INTO itens_pedido (pedido_id, cardapio_id, quantidade, item_nome, item_descricao) 
                              VALUES (?, ?, ?, ?, ?)";
                 $stmt_item = $conn->prepare($sql_item);
-                // Certifique-se de passar os dados corretamente
-                $stmt_item->bind_param("isssi", $pedido_id, $item['cardapio_id'], $item['nome'], $item['descricao'], $item['quantidade']);
+            
+                // Certifique-se de passar todos os dados corretamente
+                $stmt_item->bind_param("iiiss", $pedido_id, $item['id'], $item['quantidade'], $item['nome'], $item['descricao']);
                 $stmt_item->execute();
             }
     
@@ -88,13 +88,22 @@ class Pedido {
         global $conn;
         $sql = "SELECT * FROM pedido";
         $result = $conn->query($sql);
-        return $result->fetch_all(MYSQLI_ASSOC);
+    
+        $pedidos = $result->fetch_all(MYSQLI_ASSOC);
+        
+        // Para cada pedido, obtenha os itens associados
+        foreach ($pedidos as &$pedido) {
+            $pedido['itens'] = self::obterItens($pedido['id']); // Adiciona os itens ao pedido
+        }
+        
+        return $pedidos;
     }
+    
 
     // Método para obter os itens do pedido, fazendo a junção com a tabela cardapio
     public static function obterItens($pedido_id) {
         global $conn;
-        $sql = "SELECT c.nome, ip.quantidade, c.valor 
+        $sql = "SELECT c.nome, ip.quantidade, c.valor, ip.item_descricao 
                 FROM itens_pedido ip 
                 JOIN cardapio c ON ip.cardapio_id = c.id 
                 WHERE ip.pedido_id = ?";
@@ -104,5 +113,25 @@ class Pedido {
         $result = $stmt->get_result();
         return $result->fetch_all(MYSQLI_ASSOC);
     }
+    
+    public static function finalizar($num_pedido) {
+        global $conn;
+        
+        // Atualiza o status do pedido para "finalizado"
+        $sql = "UPDATE pedido SET status = 'finalizado' WHERE num_pedido = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $num_pedido);
+    
+        if ($stmt->execute()) {
+            return ['message' => 'Pedido finalizado com sucesso!'];
+        } else {
+            return ['message' => 'Erro ao finalizar o pedido.'];
+        }
+    }
+
+    
+    
+
+    
 }
 ?>

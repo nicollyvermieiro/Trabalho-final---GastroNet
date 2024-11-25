@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="CSS/Pedidos.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="JS/pedidos.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -20,18 +18,10 @@
     </nav>
 
     <nav class="b">
-        <button onclick="window.location.href='index.html'">
-            Tela Principal
-        </button>
-        <button onclick="window.location.href='funcionarios.html'">
-            👨‍💼 Funcionários
-        </button>
-        <button onclick="window.location.href='clientes.html'">
-            👥 Clientes
-        </button>
-        <button onclick="window.location.href='cardapio.html'">
-            🍽️ Cardápio
-        </button>
+        <button onclick="window.location.href='index.html'">Tela Principal</button>
+        <button onclick="window.location.href='funcionarios.html'">Funcionários</button>
+        <button onclick="window.location.href='clientes.html'">Clientes</button>
+        <button onclick="window.location.href='cardapio.html'">Cardapios</button>
     </nav>
 
     <section>
@@ -52,7 +42,7 @@
 
                 <label for="valorTotal">Valor Total: R$ <span id="valorTotal">0.00</span></label>
 
-                <label for="formaPag" ><i class="fas fa-credit-card"></i> Forma de Pagamento:</label>
+                <label for="formaPag">Forma de Pagamento:</label>
                 <select id="formaPag" name="formaPag" required>
                     <option value="dinheiro">Dinheiro</option>
                     <option value="pix">Pix</option>
@@ -72,9 +62,8 @@
 
     </section>
 
-    <footer>
-        <p>&copy; 2024 GastroNet</p>
-    </footer>  
+    <script>
+    </script>    
 
 </body>
 </html>

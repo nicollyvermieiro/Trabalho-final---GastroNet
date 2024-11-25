@@ -30,9 +30,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             break;
 
         case 'listar':
+            // Listar pedidos com os itens
             $pedidos = Pedido::listar();
             if ($pedidos) {
-                echo json_encode($pedidos);  // Retorna a lista de pedidos em JSON
+                // Agora, vamos buscar os itens de cada pedido
+                foreach ($pedidos as &$pedido) {
+                    $pedido['itens'] = Pedido::obterItens($pedido['id']);
+                }
+                echo json_encode($pedidos);  // Retorna a lista de pedidos com itens em JSON
             } else {
                 echo json_encode(["message" => "Nenhum pedido cadastrado."]);
             }
@@ -57,6 +62,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 echo json_encode(["message" => "Nenhum item no cardápio."]);
             }
             break;
+
+            case 'finalizar':
+                // Finalizar pedido
+                $num_pedido = $_POST["num_pedido"];
+    
+                // Chama o método para finalizar o pedido
+                $response = Pedido::finalizar($num_pedido);
+    
+                // Retorna a resposta em formato JSON
+                echo json_encode($response);
+                break;
     }
 }
 ?>
